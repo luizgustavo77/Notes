@@ -1,0 +1,42 @@
+﻿<VirtualHost *:80>
+    DocumentRoot "/CAMINHO"
+    ServerName SITE
+    ServerAlias www.SITE
+    ServerAlias SITEALIAS
+    ServerAlias www.SITEALIAS
+    RewriteEngine on
+    RewriteCond %{SERVER_NAME} =SITE [OR]
+    RewriteCond %{SERVER_NAME} =www.SITE
+    RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [L,NE,R=permanent]
+</VirtualHost>
+
+<VirtualHost *:443>
+    SSLEngine on
+    DocumentRoot "/CAMINHO"
+    ServerName SITE
+    ServerAlias www.SITE
+    ServerAlias SITEALIAS
+    ServerAlias www.SITEALIAS
+#    RewriteRule ^ http://%{SERVER_NAME}%{REQUEST_URI} [L,NE,R=permanent]
+    SSLCertificateFile /etc/letsencrypt/live/CERT/cert.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/CERT/privkey.pem
+    SSLCertificateChainFile /etc/letsencrypt/live/CERT/chain.pem
+</VirtualHost>
+
+<VirtualHost *:80>
+    DocumentRoot "/CAMINHO"
+    ServerName SITEALIAS
+    ServerAlias www.SITEALIAS
+    Redirect / https://SITE/
+</VirtualHost>
+
+<VirtualHost *:443>
+    SSLEngine on
+    DocumentRoot "/CAMINHO"
+    ServerName SITEALIAS
+    ServerAlias www.SITEALIAS
+    SSLCertificateFile /etc/letsencrypt/live/CERT/cert.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/CERT/privkey.pem
+    SSLCertificateChainFile /etc/letsencrypt/live/CERT/chain.pem
+    Redirect / https://SITE/
+</VirtualHost>
