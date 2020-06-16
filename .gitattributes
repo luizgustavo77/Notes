@@ -1,19 +1,25 @@
-## GITATTRIBUTES FOR WEB PROJECTS
-#
-# These settings are for any web project.
-#
-# Details per file setting:
-#   text    These files should be normalized (i.e. convert CRLF to LF).
-#   binary  These files are binary and should be left untouched.
-#
-# Note that binary is a macro for -text -diff.
-######################################################################
+*.cs text diff=csharp
+*.msbuild text
+*.config text
+*.conf text
+*.cscfg text
+*.csdef text
+*.xml text
+*.js text
 
-# Auto detect
-##   Handle line endings automatically for files detected as
-##   text and leave all files detected as binary untouched.
-##   This will handle all files NOT defined below.
-*                 text=auto
+*.csproj text merge=union
+*.fsproj text merge=union
+*.sln text eol=crlf merge=union
 
-# Source code
-*.dot             text
+*.jpg binary
+*.png binary
+*.gif binary
+
+*.doc diff=astextplain
+*.DOC diff=astextplain
+*.docx diff=astextplain
+*.DOCX diff=astextplain
+*.pdf diff=astextplain
+*.PDF diff=astextplain
+
+* text=auto
