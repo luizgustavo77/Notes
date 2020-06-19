@@ -2387,9 +2387,9 @@ static void Main(string[] args)
 
 ---
 
-# **GUID**, globally unique identifier
+### **GUID**, globally unique identifier
 > É um identificador unico composto por 32 caracters
-### **Versão**
+#### **- Versão**
 > Cada versão possibilita uma forma de gerar esse codigo, a mais atual que é a "Versão 5" que possibilita a passagem de um parametro 
 
 - **Versão na cadeia de caracters**
@@ -2404,4 +2404,5 @@ Console.WriteLine(g);
 
 // Mostrando
 Console.WriteLine(Guid.NewGuid());
+```
 ```
