@@ -2384,3 +2384,24 @@ static void Main(string[] args)
 
 ### **Resources File**
 - [**ResourcesFile**](https://github.com/luizgustavo77/Notes/blob/master/Developer/Back/ResourcesFile.md)
+
+---
+
+# **GUID**, globally unique identifier
+> É um identificador unico composto por 32 caracters
+### **Versão**
+> Cada versão possibilita uma forma de gerar esse codigo, a mais atual que é a "Versão 5" que possibilita a passagem de um parametro 
+
+- **Versão na cadeia de caracters**
+    - xxxxxxxx-xxxx-Yxxx-xxxx-xxxxxxxxxxxx, o 'Y' na cadeia informa a versão
+
+- **Exemplo**
+
+``` c#
+// Criar
+Guid g = Guid.NewGuid();
+Console.WriteLine(g);
+
+// Mostrando
+Console.WriteLine(Guid.NewGuid());
+```
