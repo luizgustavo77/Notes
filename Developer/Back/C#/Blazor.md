@@ -29,7 +29,9 @@
 ---
 
 ## **Blazor**
-- Desvantagem
+> Possibilita usar C# para trabalhar os elementos da pagina, só esta disponivel na versão 3.1 ou maior do ASP NET Core
+
+- **Desvantagem**
 
     Baixar todas as DLL do .net
 
@@ -51,7 +53,7 @@
 ### **Blazor Server App VS Blazor WebAssembly APP**
 > Ambos sao projetos blazor, mas o framework oferece essas duas opcoes
 
-- **Client-Side**, Blazor Server App
+- **Blazor Server App**, Client-Side
 
     Apenas arquivos staticos e codigos C#, podemos fazer requisicoes WEB API
 
@@ -80,7 +82,7 @@
 
     - **App.razor** Define o roteamento para as paginas
 
-- **Server-Side**, Blazor WebAssembly (Client-Side + .Net Core)
+- **Blazor WebAssembly**, Server-Side (Client-Side + .Net Core)
 
     Faz o cliente-side e chama as API de um ASP NET Core
 
@@ -176,16 +178,117 @@ public class Calculo
 }
 ```
 
+- **Chamando Pagina Razor**
+   - **Instanciar**, Podemos instanciar/referenciar uma pagina NOME.razor para mostrar na tela
+   - **Parametros**, passamos parametros que devem ser passados na chamada da pagina 
+
+``` HTML
+<!-- Instanciar pagina razor -->
+< NOME />
+
+<!-- Parametros -->
+<!-- Adiciona o parametro na pagina razor -->
+@code {
+    [Parameter]
+    public string Msg { get; set; }
+}
+<!-- Instanciar pagina razor -->
+< NOME Msg="Carregando" />
+
+```
+
+---
+## **DataBinding**
+> Estabelece um canal de sincronização entre variavel e elemento HTML ou componente
+
+### - **One-Way**, dados unidirecional
+   - **Como funciona?**
+      - Evento ou Ação do usuario > Atualiza valor > Renderiza
+   - **Usando**
+``` blazor
+<h1>@Msg</h1>
+
+@code {
+    private string Msg { get; set; } = "Ola Mundo";
+}
+```
+
+### - **Two-Way**, dados bidirecional
+   - **Como funciona?**
+      - Podemos passar uma variavel/Objeto como parametro que vai ser atualizada em tempo real quando o valor mudar
+   - **Usando**
+``` blazor
+<!-- O campo texto joga a entraga da titulo -->
+
+<h1>@Msg</h1>
+<input @bind="Msg">
+
+@code {
+    private string Msg { get; set; } = "Ola Mundo";
+}
+```
+---
+## **Diretivas**
+> Determina a pagina vai ser compilada, e devem ser adicionados no inicio da pagina
+
+- **@page** Define qa rota de requisições do browser. 
+
+- **@using** Utilizada para importar um namespace.
+
+- **@inject** Essa diretiva serve para injetarmos serviços no nosso componente. 
+
+- **@layout** Especifica qual o Layout que será utilizado para renderizar o componente.
+
+- **@implements** Usado para implementar um inherits.
+
+- **@inherits** Usado para ser herdado de outro componente
+
+- **@typeparam** Serve para definir um Tipo Genérico para o Componente.
+
+- **@functions** É utilizada para incluir um bloco de código C# dentro do componente. 
+
+---
+## **Diretivas de atributos**
+> Tags blazor que atribuem as ferramentas do blazor nos atributos HTML
+
+- **@bind** Cria o Two-Way databind
+
+- **@on(EVENTO)** Adiciona um tratamento para o evento
+
+- **@ref** Captura uma referencia para o componente
+
+- **@atributes** Renderiza um dicionario de atributos
+
+
+
 ---
 
 ## **Tags Blazor**
 
 - **@page "/CAMINHO"** define o caminho ate essa pagina
 
-- **< NOME />** Podemos instanciar/referenciar uma pagina NOME.razor para mostrar na tela
-
 - **@Body** Define o local onde vamos renderizar as paginas que chegam dentro do MainLayout
 
 - **< NavLink href="CAMINHO"></ NavLink>** Definimos um link para a pagina NOME.razer nesse CAMINHO
 
-- **@Corde {}** Aqui dentro podemos declarar variaveis, metodos, classes..
+- **@Code {}** Aqui dentro podemos declarar variaveis, metodos, classes..
+
+---
+## **First Loading**
+> Assim que você abre a pagina no seu navegador esse evento dispara, é bom trabalhar bem ele pois se for o primeiro acesso pode levar alguns segundos
+
+- **Como atribuir**
+   - No seu index tem uma tag chamada "<app><app>" que por padrão vem escrito "Loading...", podemos trocar o texto por um gif ou outro elemento para deixar essa espera mais bonita
+
+---
+## **Metodos**
+> Algumas dicas de como trabalhar com metodos e os principais metodos
+
+- **Como chamar metodos dentro do evento HTML**
+   - < button @onclick="MeuMetodo">Botao</ button>
+- **On OnInitializedAsync**, evento que roda ao terminar de carregar a pagina de forma Async
+   - protected override async Task OnInitializedAsync(){}
+
+- **Chamando API/Arquivo**, aqui recupera um arquivo dentro de "wwwroot" e converte para uma lista de CLASSE
+   - @inject HttpClient http
+   - await http.GetJsonAsync<List< CLASSE>>("arquivo.json");
