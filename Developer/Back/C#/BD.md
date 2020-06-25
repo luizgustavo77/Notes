@@ -410,7 +410,8 @@ public static bool Exist<T>(T entidade) where T : class
         - **Sequence Container:** Garante que todos os executaveis dentro dele sejam terminados antes de passar para proxima interação, para usar so colocar as Task dentro dele
 
 - **Publicar:**
- Podemos adicionar um "dtsx" dentro do banco para que o DTS seja rodado por um job ou pelo usuario
+ Podemos adicionar um "dtsx" dentro do banco para que o DTS seja rodado por um job ou pelo usuariO
+ **OBs:** Em algumas versoes do SQL Server nao descemos o package (.dtsz), quando for assim faz deploy da aplicação inteira
  ```mermaid
 graph TD
 Projeto-->Deploy
