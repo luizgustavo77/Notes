@@ -205,7 +205,7 @@ public class Calculo
    - **Como funciona?**
       - Evento ou Ação do usuario > Atualiza valor > Renderiza
    - **Usando**
-``` blazor
+``` c#
 <h1>@Msg</h1>
 
 @code {
@@ -259,17 +259,77 @@ public class Calculo
 
 - **@atributes** Renderiza um dicionario de atributos
 
+---
+## **Eventos**
+### **EventCallBack**
+> Podemos chamar metodos de outra pagina. Acionar metodos do Pai na chamada do Filho para que o filho possar executar o metodo do Pai como se fosse uma herança
+
+- **Pagina Pai**
+``` c#
+// Nome dessa pagina é PAI
+
+<FILHO METODO="METODOPAI" />
+
+@code {
+    public void METODOPAI()
+    {
+        // codigo
+    }
+}
+```
+
+- **Pagina Filho**
+```c#
+// Nome dessa pagina é FILHO
+
+<button @click"@(() => METODO.InvokeAsync(item))"> </button>
+
+@code {
+    // Adicionamos o evento aqui para ter uma referencia que quando criarmos o filho temos que passar esse metodo
+    [Parameter]
+    public EventCallBack<CLASSE> METODO {get; set;}
+```
+### **Argumentos**
+- [**Documento**](https://docs.microsoft.com/pt-br/aspnet/core/blazor/components/event-handling)
+
+---
+
+## **RenderFragment & ChildContent**
+> Permite adicionar dados, elementos, atributos e conteudo.
+
+- **Pagina Filho**, está que deve ser instanciada
+``` c#
+// Nome da pagina é FILHO
+
+// Adiciona o conteudo aqui
+@ChildContent1
+
+@ChildContent2
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent1 {get;set;}
+    
+    [Parameter]
+    public RenderFragment ChildContent2 {get;set;}
+}
+```
+
+- **Pagina Pai**
+``` c#
+<FILHO> 
+    <childcontent1> <h1> OLA, EU ESTOU APARECENDO NA PAGINA FILHO </h1> </childcontent1>
+
+    <childcontent2> <h1> EU TAMBEM, MAS LOGO ABAIXO </h1> </childcontent2>
+</FILHO>
+```
 
 
 ---
 
 ## **Tags Blazor**
 
-- **@page "/CAMINHO"** define o caminho ate essa pagina
-
 - **@Body** Define o local onde vamos renderizar as paginas que chegam dentro do MainLayout
-
-- **< NavLink href="CAMINHO"></ NavLink>** Definimos um link para a pagina NOME.razer nesse CAMINHO
 
 - **@Code {}** Aqui dentro podemos declarar variaveis, metodos, classes..
 
@@ -292,3 +352,4 @@ public class Calculo
 - **Chamando API/Arquivo**, aqui recupera um arquivo dentro de "wwwroot" e converte para uma lista de CLASSE
    - @inject HttpClient http
    - await http.GetJsonAsync<List< CLASSE>>("arquivo.json");
+
