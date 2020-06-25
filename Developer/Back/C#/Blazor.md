@@ -227,6 +227,23 @@ public class Calculo
     private string Msg { get; set; } = "Ola Mundo";
 }
 ```
+### **Bind & Bind-Value**
+> Diferença entre os dois
+
+- **Bind**
+
+    Por padrão atualiza o valor da variavel em tempo real, ou seja mudou no campo muda no blazor
+
+- **Bind-Value**
+
+    Passamos para ele o evento que vai acionar essa alteração, por padrão é o input e funciona da mesma forma que o Bind
+
+``` c#
+// Nesse evento usamos os dois para mostrar que como herdam do mesmo objeto podemos apenas sobrescrever o Bind para adicionar
+<input @bind="@CurrentValue" 
+       @bind-value:event="oninput" />
+```
+
 ---
 ## **Diretivas**
 > Determina a pagina vai ser compilada, e devem ser adicionados no inicio da pagina
@@ -341,13 +358,24 @@ public class Calculo
    - No seu index tem uma tag chamada "<app><app>" que por padrão vem escrito "Loading...", podemos trocar o texto por um gif ou outro elemento para deixar essa espera mais bonita
 
 ---
+## **Ciclo de vida dos Componentes**
+> Metodos especias que podemos sobrescrever para capturar o ciclo de vida do componente
+
+- **On OnInitializedAsync**, evento que roda ao terminar de carregar a pagina de forma Async
+   - protected override async Task OnInitializedAsync(){}
+
+- **OnParametersSetAsync**, evento quando recebemos os parametros do Pai
+
+- **OnAfterRenderAsync**, evento de termino da renderização do componente
+
+- **IDisposable**, desconstrução do componente
+
+---
 ## **Metodos**
 > Algumas dicas de como trabalhar com metodos e os principais metodos
 
 - **Como chamar metodos dentro do evento HTML**
    - < button @onclick="MeuMetodo">Botao</ button>
-- **On OnInitializedAsync**, evento que roda ao terminar de carregar a pagina de forma Async
-   - protected override async Task OnInitializedAsync(){}
 
 - **Chamando API/Arquivo**, aqui recupera um arquivo dentro de "wwwroot" e converte para uma lista de CLASSE
    - @inject HttpClient http
