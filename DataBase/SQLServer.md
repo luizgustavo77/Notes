@@ -920,7 +920,7 @@ WHEN NOT MATCHED BY SOURCE THEN
 ## **DTS**
 > Codigo SQL onde temos um fluxo a ser seguido, escrevemos ele no Visual Studio e exportamos para o Servidor do banco
 
-- [DTS](https://github.com/luizgustavo77/Notes/blob/master/Developer/Back/BD.md#dts-data-transformation-services)
+- [DTS](https://github.com/luizgustavo77/Notes/blob/master/Developer/Back/C%23/BD.md#dts-data-transformation-services)
 
 - **Caminho**   
     Integration Services Catalog > File > Projects > NomeProject  > DTS
