@@ -34,31 +34,17 @@ Docker Centos
 ``` bash
 sudo yum install -y yum-utils device-mapper-persistent-data lvm2
 sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo  
-sudo yum install docker-ce  
+sudo yum install docker-ce --nobest -y
 sudo usermod -aG docker $(whoami)  
 sudo systemctl enable docker.service  
 sudo systemctl start docker.service  
 ```
 * ***Compose Centos***  
 ``` bash
-sudo yum install epel-release  
-sudo yum install -y python-pip  
-sudo pip install docker-compose  
-sudo yum upgrade python*  
-docker-compose version  
-```
-DOCKER AWS
-* ***Install***
-``` bash
-sudo amazon-linux-extras install docker -y
-sudo service docker start 
-sudo usermod -a -G docker ec2-user
-```
-* ***Docker Compose***
-``` bash
 sudo curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-compose-`uname -s`-`uname -m` | sudo tee /usr/local/bin/docker-compose > /dev/null
 sudo chmod +x /usr/local/bin/docker-compose
 ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+docker-compose version
 ```
 
 ***Administrando container***  
