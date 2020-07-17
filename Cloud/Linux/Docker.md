@@ -52,6 +52,7 @@ docker-compose version
 docker run IMAGE - cria um container se nao tiver a imagem ele da um pull
 docker container ls - mostra containers em execucao
 docker images - mostra todas as imagens baixadas e paradas
+docker image rm IdDaImagem - apaga imagem
 docker container ls -a - mostra todos os containers ja executados
 docker container run -ti IMAGEM /bin/bash - cria container com terminal interativo *EX:docker run -ti centos:7*
 docker container run -d IMAGEM /bin/bash - cria container SEM terminal interativo *EX:docker run -d centos:7*
