@@ -483,6 +483,116 @@ public ActionResult Salvar(CLASSE c)
 - **Sem Mapeamento**
     - Podemos usar o LINQ com INCLUDE E INCLUDETHEN para salvar no banco os objetos referenciados 
 
+--- 
+
+## **Variaveis de Sessão**
+
+### **Session**
+> Variavel que normalmente guarda informações da pagina aberta para agilizar processor ou personalizar o conteudo. **Como funciona?** salva um estado, variavel ou objeto enquanto o navegador estiver aberto.
+
+- **Com o .Net WebForms** 
+``` c#
+Session["FirstName"] = firstName;   
+  
+firstName = (string)(Session["FirstName"]); 
+```
+
+- **Sem o .Net WebForms** 
+``` C#
+HttpContext context = HttpContext.Current;  
+context.Session["FirstName"] = firstName;  
+firstName = (string)(context.Session["FirstName"]);  
+```
+
+### **Coockie**
+> Variavel que normalmente referencia uma sessão entre o usuario e o servidor com no máximo 4 KB separados por ponto e vírgula e salva no lado do usuario. **Como funciona?** Quando um navegador solicita uma página da Web de um servidor, os cookies pertencentes à página são adicionados à solicitação. Dessa forma, o servidor obtém os dados necessários para "lembrar" as informações sobre os usuários.
+- **Create**
+``` javascript
+function setCookie(cname, cvalue, exdays) {
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+  var expires = "expires="+d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+```
+- **Get**
+``` javascript
+function getCookie(cname) {
+  var name = cname + "=";
+  var ca = document.cookie.split(';');
+  for(var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+``` 
+- **Check**
+``` javascript
+function checkCookie() {
+  var user = getCookie("username");
+  if (user != "") {
+    alert("Welcome again " + user);
+  } else {
+    user = prompt("Please enter your name:", "");
+    if (user != "" && user != null) {
+      setCookie("username", user, 365);
+    }
+  }
+}
+```
+- **Delete**
+> Basta definir o parâmetro expires para uma data passada
+``` javascript
+document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+```
+
+### **View State**
+> Variavel que normalmente guarda informações da pagina aberta para agilizar processor ou personalizar o conteudo. **Como funciona?** salva um estado, variavel ou objeto enquanto nâo trocar de pagina.
+
+- **Salvar**
+```c#
+ ViewState["Nome"] = Nome;
+```
+- **Ler**
+```C#
+Nome = ViewState["Nome"].ToString();
+```
+
+### **QueryString**
+> Podemos atribuir variaveis na URL e chama-las no nosso codigo
+``` c#
+// Exemplo de URL
+"https://URL?VARIAVEL=VALOR"
+
+// Chamando
+string VARIAVEL = Request.QueryString["VARIAVEL"])
+```
+
+---
+## **WebConfig**
+- **AppSettings**
+> Podemos salvar variaveis como string no WebConfig para não ter que abrir o codigo fonte na hora de editar alguma coneccao.
+
+``` c#
+// Chamando no Codigo
+string SENHA = ConfigurationManager.AppSettings["NOME"];
+
+// Atribuindo no WebConfig
+  </system.serviceModel>// Essa tag e padrão do WebConfig e colocamos o "appSettings" com as variaveis que quisermos dentro
+  <appSettings>
+    <add key="NOME" value="SENHA"/>
+  </appSettings>
+</configuration>// Essa tag por padrão fecha o WebConfig
+```
+---
+
+
 ---
 
 ### **Solucoes**
