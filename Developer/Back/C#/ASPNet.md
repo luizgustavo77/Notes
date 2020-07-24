@@ -6,9 +6,9 @@
 
 ---
 
-## **MVC**
-> Model, View and Controller
-### **Servidor**
+## **Servidor** Default no Core e nas novas versões do Framework
+>Configuração Statup e Program para gerenciar as requisições
+
 > Nós instanciamos uma aplicação WEB atraves da implementação do IWebHost (Microsoft.AspNetCore) e vamos ver como funciona seu  Request Pipeline (Fluxo que uma requisição HTTP).
 - **Program.cs**, que faz a hospedagem da aplicacao
 ``` C#
@@ -218,6 +218,9 @@ public void Configure(IApplicationBuilder app)
     app.UseMvcWithDefaultRoute();
 }
 ```
+---
+## **MVC**
+> Model, View and Controller
 
 ### **View**
 > Responsavel por conter o HTML/CSS da pagina, ou seja seu conteudo que é visualizado pelo usuário
@@ -236,7 +239,7 @@ public IActionResult Index()
     //codigo
 }
 ```
-- **_ViewImports**
+- **_ViewImports** Core
     - Importa as classes que serao utilizadas pelas views
     
 - **_ViewStart**
@@ -286,7 +289,7 @@ public IActionResult Index()
 
     @Html.Partial("_NOME")
 
-#### **Bundle Juntando referencias**
+### **Bundle**, Framework
 > Podemos juntar referencias para carregar apenas um arquivo como juntar CSS e Bootstrap ou diferentes repositorios Jquery. Dentro do **BundleConfig.cs** no metodo RegisterBundles
 
 - **Criando**
@@ -490,14 +493,14 @@ public ActionResult Salvar(CLASSE c)
 ### **Session**
 > Variavel que normalmente guarda informações da pagina aberta para agilizar processor ou personalizar o conteudo. **Como funciona?** salva um estado, variavel ou objeto enquanto o navegador estiver aberto.
 
-- **Com o .Net WebForms** 
+- **Framework** 
 ``` c#
 Session["FirstName"] = firstName;   
   
 firstName = (string)(Session["FirstName"]); 
 ```
 
-- **Sem o .Net WebForms** 
+- **Core** 
 ``` C#
 HttpContext context = HttpContext.Current;  
 context.Session["FirstName"] = firstName;  
@@ -552,7 +555,7 @@ function checkCookie() {
 document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 ```
 
-### **View State**
+### **View State** Obsoleto
 > Variavel que normalmente guarda informações da pagina aberta para agilizar processor ou personalizar o conteudo. **Como funciona?** salva um estado, variavel ou objeto enquanto nâo trocar de pagina.
 
 - **Salvar**
@@ -575,7 +578,7 @@ string VARIAVEL = Request.QueryString["VARIAVEL"])
 ```
 
 ---
-## **WebConfig**
+## **WebConfig** Framwork
 - **AppSettings**
 > Podemos salvar variaveis como string no WebConfig para não ter que abrir o codigo fonte na hora de editar alguma coneccao.
 
@@ -592,9 +595,6 @@ string SENHA = ConfigurationManager.AppSettings["NOME"];
 ```
 ---
 
-
----
-
 ### **Solucoes**
 - [**SolucoesWEB**](https://github.com/luizgustavo77/Notes/blob/master/Developer/FullStack/Solu%C3%A7%C3%B5esWEB.md)
 
@@ -602,5 +602,5 @@ string SENHA = ConfigurationManager.AppSettings["NOME"];
 ### **Resources File**
 - [**ResourcesFile**](https://github.com/luizgustavo77/Notes/blob/master/Developer/Back/ResourcesFile.md)
 
-### **WCF**
+### **WCF** Framework
 - [**WCF&MVC**](https://github.com/luizgustavo77/Notes/blob/master/Developer/Back/C%23/WCF%26MVC.md)
