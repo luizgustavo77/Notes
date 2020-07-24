@@ -508,7 +508,41 @@ firstName = (string)(context.Session["FirstName"]);
 ```
 
 ### **Coockie**
+> Guarda informações sobre o usuario como sites que acessa, IP, etc...
 
+### **Cache**
+> Informações sobre a pagina da internet que você está acessando
+
+- **Exemplo**
+``` c#
+public class Cache
+{
+    //private static ObjectCache cache = MemoryCache.Default;
+    private static System.Web.Caching.Cache cache = System.Web.HttpContext.Current.Cache;
+
+    public static void Adicionar(string nomeCache, object item, int qtdHoras)
+    {
+        //cache.Set(nomeCache, item, DateTimeOffset.Now.AddHours(qtdHoras));
+        cache.Insert(nomeCache, item, null, System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(qtdHoras, 0, 0));
+    }
+
+    public static void Adicionar(string nomeCache, object item)
+    {
+        //cache.Set(nomeCache, item, DateTimeOffset.Now.AddDays(1));
+        cache.Insert(nomeCache, item, null, System.Web.Caching.Cache.NoAbsoluteExpiration, new TimeSpan(1, 0, 0, 0));
+    }
+
+    public static T Obter<T>(string nomeCache)
+    {
+        return (T)cache.Get(nomeCache);
+    }
+
+    public static void Remover(string nomeCache)
+    {
+        cache.Remove(nomeCache);
+    }
+}
+```
 
 ### **View State** Obsoleto
 > Variavel que normalmente guarda informações da pagina aberta para agilizar processor ou personalizar o conteudo. **Como funciona?** salva um estado, variavel ou objeto enquanto nâo trocar de pagina.
