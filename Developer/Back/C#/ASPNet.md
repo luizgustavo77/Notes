@@ -1,4 +1,4 @@
-# **ASP Net (.NET Framework)**
+# **ASP NET Framework & ASP NET Core**
 ## **Model Binding**
 > Tags para facilitar o pegar dados provenientes do usuario por uma requisição Get,Post, ...
 
