@@ -1,6 +1,6 @@
 # 💻 **Anotações e exemplos de codigo**
 
-> Foco no Desenvolvimento 🌐 Web
+> Foco no Desenvolvimento Web 🌐
 
 # 🚀 **Propósito**
 > Alem do uso pessoal está é minha pequena contribuição sabendo que por diversas vezes encontrei exemplos e explicações na internet de maneira gratuita
