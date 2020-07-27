@@ -571,7 +571,7 @@ string VARIAVEL = Request.QueryString["VARIAVEL"])
 ```
 
 ---
-## **WebConfig** Framwork
+### **WebConfig** Framwork
 - **AppSettings**
 > Podemos salvar variaveis como string no WebConfig para não ter que abrir o codigo fonte na hora de editar alguma coneccao.
 
@@ -586,6 +586,40 @@ string SENHA = ConfigurationManager.AppSettings["NOME"];
   </appSettings>
 </configuration>// Essa tag por padrão fecha o WebConfig
 ```
+---
+### **Identity**
+> Ferramenta para adicionar o Login do usuario
+
+- **Novo projeto**
+> Para adicionar em um novo projeto podemos definir a Authenticação do usuario no momento de criar o projeto e ele vai criar o Identity
+
+- **Projeto Existente**
+> Podemos usar o Scaffolded para gerar o Identity com as propriedades que queremos usar, devemos passar tambem o _Layout que ele deve usar e se podemos criar na hora um Context e a Tabela que vamos usar para salvar essas informações.
+
+- Add Scaffolded
+    - Identity
+        - Selecionar pastas e modelos
+
+- Startup, adicionar o metodo **"UseAuthorization"** como mostra o exemplo abaixo
+``` c#
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+    app.UseHttpsRedirection();
+    app.UseStaticFiles();
+
+    app.UseRouting();
+
+    app.UseAuthorization();
+```
+
+- _Layout, no shared ja ira adicionar o parametro **"_LoginPartial"**
+```c#
+<div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+    <partial name="_LoginPartial" />
+    <ul class="navbar-nav flex-grow-1">
+        <li class="nav-item">
+``` 
+
 ---
 
 ### **Solucoes**
