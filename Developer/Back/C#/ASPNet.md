@@ -5,7 +5,11 @@
 ### - [**Documentação**](https://docs.microsoft.com/en-us/aspnet/core/mvc/models/model-binding?view=aspnetcore-3.1)
 
 ---
+## NuGet Packages
+> Ferramenta que resolve instalação de frameworks e extenções de forma organizada e centralizada.
+- Em suma, um pacote do NuGet é um arquivo ZIP com a extensão .nupkg que contém o código compilado (DLLs), outros arquivos relacionados a esse código e um manifesto descritivo que inclui informações como o número de versão do pacote.
 
+---
 ## **Servidor** Default no Core e nas novas versões do Framework
 >Configuração Statup e Program para gerenciar as requisições
 
