@@ -495,7 +495,7 @@ public ActionResult Salvar(CLASSE c)
 ## **Variaveis de Sessão**
 
 ### **Session**
-> Variavel que normalmente guarda informações da pagina aberta para agilizar processor ou personalizar o conteudo. **Como funciona?** salva um estado, variavel ou objeto enquanto o navegador estiver aberto.
+> É usado para armazenar por usuário informações para a sessão atual da Web no server. Ele suporta o uso de um servidor de banco de dados como o armazenamento de backend.. **Como funciona?** salva um estado, variavel ou objeto enquanto o navegador estiver aberto.
 
 - **Framework** 
 ``` c#
@@ -512,11 +512,10 @@ firstName = (string)(context.Session["FirstName"]);
 ```
 
 ### **Coockie**
-> Guarda informações sobre o usuario como sites que acessa, IP, etc...
+> Deve ser usado para armazenar por usuário informações para a sessão atual da Web ou persistente informações sobre o client, portanto, o cliente tem controle sobre o conteúdo de um cookie.
 
 ### **Cache**
-> Informações sobre a pagina da internet que você está acessando
-
+> É compartilhado entre usuários em um único aplicativo . Seu objetivo principal é armazenar dados em cache de um armazenamento de dados e não deve ser usado como armazenamento primário. Ele suporta os recursos invalidação automática.
 - **Exemplo**
 ``` c#
 public class Cache
