@@ -314,8 +314,27 @@ bundles.add(estilos);
 @section Scripts{
     @Scripts.Render("~/bundles/scripts")
 }
-``` 
----
+```
+
+### **Razor Page**
+> Pagina razor (que funciona como uma View), e no fundo uma classe ".cshtml.cs" que podemos adicionar código.
+
+#### - **Arquitetura**
+- Page
+``` c#
+// NOME.cshtml
+@page
+@model NOMEModel
+...
+```
+
+- Model
+``` c#
+//NOME.cshtml.cs
+public class NOMEModel : PageModel
+{
+    ...
+```
 
 
 ### **Controller**
@@ -587,7 +606,7 @@ string SENHA = ConfigurationManager.AppSettings["NOME"];
 ```
 ---
 ### **Identity**
-> Ferramenta para adicionar o Login do usuario
+> Ferramenta para adicionar o Login do usuario que salva informações como Cookies
 
 - **Novo projeto**
 > Para adicionar em um novo projeto podemos definir a Authenticação do usuario no momento de criar o projeto e ele vai criar o Identity
@@ -595,11 +614,11 @@ string SENHA = ConfigurationManager.AppSettings["NOME"];
 - **Projeto Existente**
 > Podemos usar o Scaffolded para gerar o Identity com as propriedades que queremos usar, devemos passar tambem o _Layout que ele deve usar e se podemos criar na hora um Context e a Tabela que vamos usar para salvar essas informações.
 
-- Add Scaffolded
-    - Identity
+- **Add Scaffolded**
+    - **Identity**
         - Selecionar pastas e modelos
 
-- Startup, adicionar o metodo **"UseAuthorization"** como mostra o exemplo abaixo
+- **Startup**, adicionar o metodo **"UseAuthorization"** como mostra o exemplo abaixo
 ``` c#
 public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 {
@@ -611,7 +630,7 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     app.UseAuthorization();
 ```
 
-- _Layout, no shared ja ira adicionar o parametro **"_LoginPartial"**
+- **_Layout,** no shared ja ira adicionar o parametro **"_LoginPartial"**
 ```c#
 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
     <partial name="_LoginPartial" />
@@ -619,6 +638,71 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         <li class="nav-item">
 ``` 
 
+
+- **Traduzindo Identity mensagens**
+    - **Menu:**
+        - Altera os textos dentro do _LoginPartial
+    - **Telas do Identity**
+        - Altera os textos dentro das pages ".cshtml" que são criadas automaticamente
+    - **Notificações**
+``` C#
+// Cria uma classe que herde de IdentityErrorDescriber
+internal class IdentityErrorDescriberPtBr : IdentityErrorDescriber
+{
+    // de um "override" nos metodos que deseja alterar a mesagem de aviso para o usuario atribuindo no "Description" o testo
+    public override IdentityError PasswordRequiresUpper()
+    {        
+        return new IdentityError
+        {
+            Code = nameof(PasswordRequiresUpper),
+            Description = "A senha deve ter pelo menos uma letra maiúscula('A' - 'Z')."
+        };
+    }
+    ...
+
+// Adiciona a classe como referencia no "Configure"
+public void Configure(IWebHostBuilder builder)
+{
+    builder.ConfigureServices((context, services) =>
+    {
+        services.AddDbContext<AppIdentityContext>(options =>
+            options.UseSqlite(
+                context.Configuration.GetConnectionString("AppIdentityContextConnection")));
+
+        services.AddDefaultIdentity<AppIdentityUser>()
+                // Aqui atrbuimos a classe com as mensagens personalizadas
+                .AddErrorDescriber<IdentityErrorDescriberPtBr>()
+        ...
+```
+
+- **Removendo validações de Senha**
+``` c#
+// Adiciona a classe como referencia no "Configure"
+public void Configure(IWebHostBuilder builder)
+{
+    builder.ConfigureServices((context, services) =>
+    {
+        services.AddDbContext<AppIdentityContext>(options =>
+            options.UseSqlite(
+                context.Configuration.GetConnectionString("AppIdentityContextConnection")));
+
+        services.AddDefaultIdentity<AppIdentityUser>(options =>
+                    {
+                        // Atribuindo false no parametro nos desabilitamos a validação
+                        options.Password.RequireNonAlphanumeric = false;
+                        options.Password.RequireLowercase = false;
+                        options.Password.RequireUppercase = false;
+                    })
+        ...
+```
+- **Validando usuario logado para acessar pagina**
+``` c#
+// Adiciona o atributo
+[Authorize]
+public IActionResult Index()
+{
+    ...
+```
 ---
 
 ### **Solucoes**
