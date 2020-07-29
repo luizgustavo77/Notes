@@ -530,11 +530,59 @@ context.Session["FirstName"] = firstName;
 firstName = (string)(context.Session["FirstName"]);  
 ```
 
+### **SessionID**
+> Por padrão, o ASP.NET utiliza Cookies para rastrear o usuário, porém, muitos deles desligam o cookie de seu browser. Para resolver esse problema, o ASP.NET tem um recurso interessante que é o SessionID, que é inserido na URL (parecido com a QueryString) e, assim, cada usuário tem uma página única
+
+```c#
+private void Create(string key, string value)
+{
+    try
+    {
+        if (!string.IsNullorWhiteSpaces(key) && 
+            !string.IsNullorWhiteSpaces(value))
+        {
+            Session[key] = value
+        }
+    }
+    catch (Exception ex)
+    {
+        throw new Exception(ex.Message);
+    }
+}
+
+private void Get(string key)
+{
+    try
+    {
+        Session[key].ToString();
+    }
+    catch (Exception ex)
+    {
+        throw new Exception(ex.Message);
+    }
+}
+```
+
 ### **Coockie**
-> Deve ser usado para armazenar por usuário informações para a sessão atual da Web ou persistente informações sobre o client, portanto, o cliente tem controle sobre o conteúdo de um cookie.
+> Deve ser usado para armazenar por usuário informações para a sessão atual da Web ou persistente informações sobre o client, portanto, o cliente tem controle sobre o conteúdo de um cookie. Ele não pode nem vai ultrapassar 4kb e cada site pode ter 20 coockies
+``` c#
+private void WriteCookies()
+{
+    var newCookie = new HttpCookie("user");
+    newCookie.Value = Session["user"].ToString();
+    newCookie.Expires = DateTime.Now.AddMinutes(20); //Expira em 20 minutos.
+    newCookie.Domain = "devmedia.com.br"; //Comente Para funcionar Local
+    newCookie.Path = "/devMedia"; //Comente Para funcionar Local
+    newCookie.Secure = true; //Comente Para funcionar Local
+    Response.Cookies.Add(newCookie);
+}
+
+// Read
+var cookieInfo = Request.Cookies["user"];
+```
 
 ### **Cache**
-> É compartilhado entre usuários em um único aplicativo . Seu objetivo principal é armazenar dados em cache de um armazenamento de dados e não deve ser usado como armazenamento primário. Ele suporta os recursos invalidação automática.
+> É compartilhado entre usuários em um único aplicativo . Seu objetivo principal é armazenar dados em cache de um armazenamento de dados e não deve ser usado como armazenamento primário. Ele suporta os recursos invalidação automática e fica salvo no lado do servidor.
 - **Exemplo**
 ``` c#
 public class Cache
@@ -696,6 +744,7 @@ public void Configure(IWebHostBuilder builder)
         ...
 ```
 - **Validando usuario logado para acessar pagina**
+
 ``` c#
 // Adiciona o atributo
 [Authorize]
@@ -703,6 +752,127 @@ public IActionResult Index()
 {
     ...
 ```
+
+- **Adicionando informações no cadastro de usuario**
+    - Adiciona os novos campos dentro do objeto
+       - **Caminho:** Areas > Data > "AppIdentityUser"
+    - Cria e roda a Migration
+
+- **Obtendo dado do usuario logado**
+```c#
+// Adiciona a injeção de dependencia dessa forma
+public class PedidoController : Controller
+{
+    private readonly UserManager<AppIdentityUser> userManager;
+
+    public PedidoController(UserManager<AppIdentityUser> userManager)
+    {
+        this.userManager = userManager;
+    ...
+    
+    public async Task<IActionResult> Cadastro()
+    {
+        // Recupera valor
+        var usuario = await userManager.GetUserAsync(this.User);
+
+        CLASSE.VARIAVEL = usuario.VARIAVEL;
+        CLASSE.VARIAVEL = usuario.VARIAVEL;
+        ...
+```
+
+- **GetUserId**
+```C#
+// Adiciona as dependencias
+public class CLASSE : ICLASSE
+{
+    private readonly IHttpContextAccessor contextAccessor;
+    public HttpHelper(IHttpContextAccessor contextAccessor)
+    {
+        this.contextAccessor = contextAccessor;
+        ...
+
+    // Retornando o Guid
+    private string GetClienteId()
+    {
+        var claimsPrincipal = contextAccessor.HttpContext.User;
+        return userManager.GetUserId(claimsPrincipal);
+    }
+```
+
+- **Alterando dados do usuario logado**
+```c#
+// Adiciona a injeção de dependencia dessa forma
+public class PedidoController : Controller
+{
+    private readonly UserManager<AppIdentityUser> userManager;
+
+    public PedidoController(UserManager<AppIdentityUser> userManager)
+    {
+        this.userManager = userManager;
+    ...
+
+    // Atualiza o valor
+    public async Task<IActionResult> Resumo(Cadastro cadastro)
+    {
+        var usuario = await userManager.GetUserAsync(this.User);
+
+        usuario.VARIAVEL       = cadastro.VARIAVEL;
+        usuario.VARIAVEL    = cadastro.VARIAVEL;
+
+        await userManager.UpdateAsync(usuario);
+        ...
+```
+---
+### **OAuth 2.0**
+> Ferramenta que facilita para o usuario o Login alem de melhorar a segurança ja que o usuario não tem que passar informações. Basicamente ele permite logar com o Google, Facebook, Etc...
+
+- **Como funciona:**
+    - **Cod. de Autenticação**
+    Faz solicitação e retorna um "Cod. de Autenticação", e para mais informações ele faz uma solicitação usando o "Cod. de Autenticação" e recebe um Token em troca. 
+    - **Token Acesso**
+    Após solicitado o Token da acesso a informações do usuário por tempo limitado 
+
+#### **Configurando:** usando Microsoft e Google
+- **Microsoft**
+
+    Temos configurar nossa aplicação no site abaixo para dar as permissões para nossa aplicação acessar os dados da Microsoft depois da permissão do usuario.
+
+    https://apps.dev.microsoft.com/
+    // TA ERRADO CONFERE A PAGINA : https://cursos.alura.com.br/course/aspnet-core-identity/task/66806
+
+---
+``` c#
+// Adiciona ao appSettings.json
+...
+  "ExternalLogin": {
+    "Microsoft": {
+      "ClientId": "ID QUE A MICROSOFT VAI DISPONIBILIZAR",
+      "ClientSecret": "SENHA QUE A MICROSOFT VAI DISPONIBILIZAR"
+    },
+    "Google": {
+      "ClientId": "",
+      "ClientSecret": ""
+    }
+...
+
+// No Startup.cs adiciona a configuração abaixo
+public void ConfigureServices(IServiceCollection services)
+    ...    
+    services.AddAuthentication()
+        .AddMicrosoftAccount(options =>
+        {
+            // Adicionando as chaves via appSettings.json
+            options.ClientId = Configuration["ExternalLogin:Microsoft:ClientId"];
+            options.ClientSecret = Configuration["ExternalLogin:Microsoft:ClientSecret"];
+        })
+        .AddGoogle(options =>
+        {
+            options.ClientId = Configuration["ExternalLogin:Google:ClientId"];
+            options.ClientSecret = Configuration["ExternalLogin:Google:ClientSecret"];
+        });
+        ...
+```
+
 ---
 
 ### **Solucoes**
