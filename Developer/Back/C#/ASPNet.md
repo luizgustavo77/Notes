@@ -837,8 +837,22 @@ public class PedidoController : Controller
 
     Temos configurar nossa aplicação no site abaixo para dar as permissões para nossa aplicação acessar os dados da Microsoft depois da permissão do usuario.
 
-    https://apps.dev.microsoft.com/
-    // TA ERRADO CONFERE A PAGINA : https://cursos.alura.com.br/course/aspnet-core-identity/task/66806
+    https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade
+
+    - Marca o ultimo checkBox (qualquer diretorio organizacional ... e contas pessoais Microsoft)
+
+    - Adiciona a Url de Redirecionamento
+
+    - Lado esquerdo "Certificados e segredos"
+        - Novo segredo do cliente
+
+- **Google**
+
+    Temos configurar nossa aplicação no site abaixo para dar as permissões para nossa aplicação acessar os dados da Microsoft depois da permissão do usuario.
+
+    https://developers.google.com/identity/sign-in/web/sign-in
+
+    - Configure a Project
 
 ---
 ``` c#
