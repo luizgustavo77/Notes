@@ -664,7 +664,7 @@ string SENHA = ConfigurationManager.AppSettings["NOME"];
 
 - **Add Scaffolded**
     - **Identity**
-        - Selecionar pastas e modelos
+        - Selecionar pastas e modelos, e podemos adicionar o SQLite como banco (check box na tela), e o VS ja vai resolver as dependencias de codigo para colocar ele para rodar
 
 - **Startup**, adicionar o metodo **"UseAuthorization"** como mostra o exemplo abaixo
 ``` c#
