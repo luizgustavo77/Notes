@@ -5,7 +5,11 @@
 ### - [**Documentação**](https://docs.microsoft.com/en-us/aspnet/core/mvc/models/model-binding?view=aspnetcore-3.1)
 
 ---
+## NuGet Packages
+> Ferramenta que resolve instalação de frameworks e extenções de forma organizada e centralizada.
+- Em suma, um pacote do NuGet é um arquivo ZIP com a extensão .nupkg que contém o código compilado (DLLs), outros arquivos relacionados a esse código e um manifesto descritivo que inclui informações como o número de versão do pacote.
 
+---
 ## **Servidor** Default no Core e nas novas versões do Framework
 >Configuração Statup e Program para gerenciar as requisições
 
@@ -310,8 +314,27 @@ bundles.add(estilos);
 @section Scripts{
     @Scripts.Render("~/bundles/scripts")
 }
-``` 
----
+```
+
+### **Razor Page**
+> Pagina razor (que funciona como uma View), e no fundo uma classe ".cshtml.cs" que podemos adicionar código.
+
+#### - **Arquitetura**
+- Page
+``` c#
+// NOME.cshtml
+@page
+@model NOMEModel
+...
+```
+
+- Model
+``` c#
+//NOME.cshtml.cs
+public class NOMEModel : PageModel
+{
+    ...
+```
 
 
 ### **Controller**
@@ -491,7 +514,7 @@ public ActionResult Salvar(CLASSE c)
 ## **Variaveis de Sessão**
 
 ### **Session**
-> Variavel que normalmente guarda informações da pagina aberta para agilizar processor ou personalizar o conteudo. **Como funciona?** salva um estado, variavel ou objeto enquanto o navegador estiver aberto.
+> É usado para armazenar por usuário informações para a sessão atual da Web no server. Ele suporta o uso de um servidor de banco de dados como o armazenamento de backend.. **Como funciona?** salva um estado, variavel ou objeto enquanto o navegador estiver aberto.
 
 - **Framework** 
 ``` c#
@@ -538,13 +561,62 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     ...
 ```
 
+### **SessionID**
+> Por padrão, o ASP.NET utiliza Cookies para rastrear o usuário, porém, muitos deles desligam o cookie de seu browser. Para resolver esse problema, o ASP.NET tem um recurso interessante que é o SessionID, que é inserido na URL (parecido com a QueryString) e, assim, cada usuário tem uma página única
+
+```c#
+private void Create(string key, string value)
+{
+    try
+    {
+        if (!string.IsNullorWhiteSpaces(key) && 
+            !string.IsNullorWhiteSpaces(value))
+        {
+            Session[key] = value
+        }
+    }
+    catch (Exception ex)
+    {
+        throw new Exception(ex.Message);
+    }
+}
+
+private void Get(string key)
+{
+    try
+    {
+        Session[key].ToString();
+    }
+    catch (Exception ex)
+    {
+        throw new Exception(ex.Message);
+    }
+}
+```
+
 ### **Coockie**
-> Guarda informações sobre o usuario como sites que acessa, IP, etc...
+> Deve ser usado para armazenar por usuário informações para a sessão atual da Web ou persistente informações sobre o client, portanto, o cliente tem controle sobre o conteúdo de um cookie. Ele não pode nem vai ultrapassar 4kb e cada site pode ter 20 coockies
+``` c#
+private void WriteCookies()
+{
+    var newCookie = new HttpCookie("user");
+    newCookie.Value = Session["user"].ToString();
+    newCookie.Expires = DateTime.Now.AddMinutes(20); //Expira em 20 minutos.
+    newCookie.Domain = "devmedia.com.br"; //Comente Para funcionar Local
+    newCookie.Path = "/devMedia"; //Comente Para funcionar Local
+    newCookie.Secure = true; //Comente Para funcionar Local
+    Response.Cookies.Add(newCookie);
+}
+
+// Read
+var cookieInfo = Request.Cookies["user"];
+```
 
 ### **Cache**
-> Informações sobre a pagina da internet que você está acessando
+> É compartilhado entre usuários em um único aplicativo . Seu objetivo principal é armazenar dados em cache de um armazenamento de dados e não deve ser usado como armazenamento primário. Ele suporta os recursos invalidação automática e fica salvo no lado do servidor.
 
 - **Framework**
+
 ``` c#
 public class Cache
 {
@@ -617,7 +689,7 @@ public IActionResult Index([FromQuery(Name = "id")] string id)
 ```
 
 ---
-## **WebConfig** Framwork
+### **WebConfig** Framwork
 - **AppSettings**
 > Podemos salvar variaveis como string no WebConfig para não ter que abrir o codigo fonte na hora de editar alguma coneccao.
 
@@ -632,6 +704,241 @@ string SENHA = ConfigurationManager.AppSettings["NOME"];
   </appSettings>
 </configuration>// Essa tag por padrão fecha o WebConfig
 ```
+---
+### **Identity**
+> Ferramenta para adicionar o Login do usuario que salva informações como Cookies
+
+- **Novo projeto**
+> Para adicionar em um novo projeto podemos definir a Authenticação do usuario no momento de criar o projeto e ele vai criar o Identity
+
+- **Projeto Existente**
+> Podemos usar o Scaffolded para gerar o Identity com as propriedades que queremos usar, devemos passar tambem o _Layout que ele deve usar e se podemos criar na hora um Context e a Tabela que vamos usar para salvar essas informações.
+
+- **Add Scaffolded**
+    - **Identity**
+        - Selecionar pastas e modelos, e podemos adicionar o SQLite como banco (check box na tela), e o VS ja vai resolver as dependencias de codigo para colocar ele para rodar
+
+- **Startup**, adicionar o metodo **"UseAuthorization"** como mostra o exemplo abaixo
+``` c#
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+    app.UseHttpsRedirection();
+    app.UseStaticFiles();
+
+    app.UseRouting();
+
+    app.UseAuthorization();
+```
+
+- **_Layout,** no shared ja ira adicionar o parametro **"_LoginPartial"**
+```c#
+<div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+    <partial name="_LoginPartial" />
+    <ul class="navbar-nav flex-grow-1">
+        <li class="nav-item">
+``` 
+
+
+- **Traduzindo Identity mensagens**
+    - **Menu:**
+        - Altera os textos dentro do _LoginPartial
+    - **Telas do Identity**
+        - Altera os textos dentro das pages ".cshtml" que são criadas automaticamente
+    - **Notificações**
+``` C#
+// Cria uma classe que herde de IdentityErrorDescriber
+internal class IdentityErrorDescriberPtBr : IdentityErrorDescriber
+{
+    // de um "override" nos metodos que deseja alterar a mesagem de aviso para o usuario atribuindo no "Description" o testo
+    public override IdentityError PasswordRequiresUpper()
+    {        
+        return new IdentityError
+        {
+            Code = nameof(PasswordRequiresUpper),
+            Description = "A senha deve ter pelo menos uma letra maiúscula('A' - 'Z')."
+        };
+    }
+    ...
+
+// Adiciona a classe como referencia no "Configure"
+public void Configure(IWebHostBuilder builder)
+{
+    builder.ConfigureServices((context, services) =>
+    {
+        services.AddDbContext<AppIdentityContext>(options =>
+            options.UseSqlite(
+                context.Configuration.GetConnectionString("AppIdentityContextConnection")));
+
+        services.AddDefaultIdentity<AppIdentityUser>()
+                // Aqui atrbuimos a classe com as mensagens personalizadas
+                .AddErrorDescriber<IdentityErrorDescriberPtBr>()
+        ...
+```
+
+- **Removendo validações de Senha**
+``` c#
+// Adiciona a classe como referencia no "Configure"
+public void Configure(IWebHostBuilder builder)
+{
+    builder.ConfigureServices((context, services) =>
+    {
+        services.AddDbContext<AppIdentityContext>(options =>
+            options.UseSqlite(
+                context.Configuration.GetConnectionString("AppIdentityContextConnection")));
+
+        services.AddDefaultIdentity<AppIdentityUser>(options =>
+                    {
+                        // Atribuindo false no parametro nos desabilitamos a validação
+                        options.Password.RequireNonAlphanumeric = false;
+                        options.Password.RequireLowercase = false;
+                        options.Password.RequireUppercase = false;
+                    })
+        ...
+```
+- **Validando usuario logado para acessar pagina**
+
+``` c#
+// Adiciona o atributo
+[Authorize]
+public IActionResult Index()
+{
+    ...
+```
+
+- **Adicionando informações no cadastro de usuario**
+    - Adiciona os novos campos dentro do objeto
+       - **Caminho:** Areas > Data > "AppIdentityUser"
+    - Cria e roda a Migration
+
+- **Obtendo dado do usuario logado**
+```c#
+// Adiciona a injeção de dependencia dessa forma
+public class PedidoController : Controller
+{
+    private readonly UserManager<AppIdentityUser> userManager;
+
+    public PedidoController(UserManager<AppIdentityUser> userManager)
+    {
+        this.userManager = userManager;
+    ...
+    
+    public async Task<IActionResult> Cadastro()
+    {
+        // Recupera valor
+        var usuario = await userManager.GetUserAsync(this.User);
+
+        CLASSE.VARIAVEL = usuario.VARIAVEL;
+        CLASSE.VARIAVEL = usuario.VARIAVEL;
+        ...
+```
+
+- **GetUserId**
+```C#
+// Adiciona as dependencias
+public class CLASSE : ICLASSE
+{
+    private readonly IHttpContextAccessor contextAccessor;
+    public HttpHelper(IHttpContextAccessor contextAccessor)
+    {
+        this.contextAccessor = contextAccessor;
+        ...
+
+    // Retornando o Guid
+    private string GetClienteId()
+    {
+        var claimsPrincipal = contextAccessor.HttpContext.User;
+        return userManager.GetUserId(claimsPrincipal);
+    }
+```
+
+- **Alterando dados do usuario logado**
+```c#
+// Adiciona a injeção de dependencia dessa forma
+public class PedidoController : Controller
+{
+    private readonly UserManager<AppIdentityUser> userManager;
+
+    public PedidoController(UserManager<AppIdentityUser> userManager)
+    {
+        this.userManager = userManager;
+    ...
+
+    // Atualiza o valor
+    public async Task<IActionResult> Resumo(Cadastro cadastro)
+    {
+        var usuario = await userManager.GetUserAsync(this.User);
+
+        usuario.VARIAVEL       = cadastro.VARIAVEL;
+        usuario.VARIAVEL    = cadastro.VARIAVEL;
+
+        await userManager.UpdateAsync(usuario);
+        ...
+```
+---
+### **OAuth 2.0**
+> Ferramenta que facilita para o usuario o Login alem de melhorar a segurança ja que o usuario não tem que passar informações. Basicamente ele permite logar com o Google, Facebook, Etc...
+
+- **Como funciona:**
+    - **Cod. de Autenticação**
+    Faz solicitação e retorna um "Cod. de Autenticação", e para mais informações ele faz uma solicitação usando o "Cod. de Autenticação" e recebe um Token em troca. 
+    - **Token Acesso**
+    Após solicitado o Token da acesso a informações do usuário por tempo limitado 
+
+#### **Configurando:** usando Microsoft e Google
+- **Microsoft**
+
+    Temos configurar nossa aplicação no site abaixo para dar as permissões para nossa aplicação acessar os dados da Microsoft depois da permissão do usuario.
+
+    https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade
+
+    - Marca o ultimo checkBox (qualquer diretorio organizacional ... e contas pessoais Microsoft)
+
+    - Adiciona a Url de Redirecionamento
+
+    - Lado esquerdo "Certificados e segredos"
+        - Novo segredo do cliente
+
+- **Google**
+
+    Temos configurar nossa aplicação no site abaixo para dar as permissões para nossa aplicação acessar os dados da Microsoft depois da permissão do usuario.
+
+    https://developers.google.com/identity/sign-in/web/sign-in
+
+    - Configure a Project
+
+---
+``` c#
+// Adiciona ao appSettings.json
+...
+  "ExternalLogin": {
+    "Microsoft": {
+      "ClientId": "ID QUE A MICROSOFT VAI DISPONIBILIZAR",
+      "ClientSecret": "SENHA QUE A MICROSOFT VAI DISPONIBILIZAR"
+    },
+    "Google": {
+      "ClientId": "",
+      "ClientSecret": ""
+    }
+...
+
+// No Startup.cs adiciona a configuração abaixo
+public void ConfigureServices(IServiceCollection services)
+    ...    
+    services.AddAuthentication()
+        .AddMicrosoftAccount(options =>
+        {
+            // Adicionando as chaves via appSettings.json
+            options.ClientId = Configuration["ExternalLogin:Microsoft:ClientId"];
+            options.ClientSecret = Configuration["ExternalLogin:Microsoft:ClientSecret"];
+        })
+        .AddGoogle(options =>
+        {
+            options.ClientId = Configuration["ExternalLogin:Google:ClientId"];
+            options.ClientSecret = Configuration["ExternalLogin:Google:ClientSecret"];
+        });
+        ...
+```
+
 ---
 
 ## **AppSettings.json** Framwork

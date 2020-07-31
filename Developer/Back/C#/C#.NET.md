@@ -49,6 +49,11 @@ Constantes|	Maiúsculas com sublinhado   	    |VALOR_DESCONTO
 |ctrl + k + d|identar |
 |shift + alt|selecionar |
 |ctrl+F12|Abrir local de Interface|
+|ctrl+,|Buscas metodos com o nome selecionado|
+|ctrl+.|Busca no codigo/bibliotecas referencia para oque estiver sendo escrito|
+|ctrl+espaço|Auto complete|
+|ctrl+k + k|Marca linha|
+|ctrl+alt+c|Abre stack da chamada|
 
 ## **Escapes**
 |Sequência de escape |	Nome do caractere	|

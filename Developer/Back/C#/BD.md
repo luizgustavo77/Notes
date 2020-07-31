@@ -104,10 +104,70 @@ public List<FerramentasViewModel> Listagem()
         }
 ```
 ---
+## **Criando Banco de dados dentro do projeto** Nenhuma opção para ASP NET Core
+> Opção para ambiente de teste ou dependendo do processo que o projeto vai atender.
 
-## **LinqSQL**
+### **Service-based Database** .Net Core e .Net Framework
+> Opção para adicionar um banco de dados a sua aplicação
 
-### **Criando**
+- **Criando:**
+
+    Botao direito > Add
+
+    Data > SQL Server Database
+
+    NOME.mdf
+
+### **SQL Server Database** ASP .Net Framework
+> Opção para adicionar um banco de dados a sua aplicação
+
+- **Criando:**
+
+    Botao direito > Add
+
+    Data > SQL Server Database
+
+    NOME.mdf
+
+---
+## **Modelo de dados** Nenhuma opção para ASP NET Core
+> Forma de gerar dinamicamente um mapeamento do nosso banco para facilitar/agilizar o desenvolvimento.
+
+### **DataSet** .Net Core, .Net Framework e ASP NET Framework
+> Modelo que espelha meu banco com as sua relações
+- **Criando:**
+
+    Direito no projeto > Add
+
+    Data > ADO.NET Entity Data Model
+
+    EF Designer from database > Next
+
+    New Connection > adiciona conexao > Next
+
+    Versao > Next
+
+    Seleciona Tabelas > Finish
+
+### **Entity Data Model** .Net Framework e ASP NET Framework
+> Modelo que espelha meu banco com as sua relações
+- **Criando:**
+
+    Direito no projeto > Add
+
+    Data > ADO.NET Entity Data Model
+
+    EF Designer from database > Next
+
+    New Connection > adiciona conexao > Next
+
+    Versao > Next
+
+    Seleciona Tabelas > Finish
+
+### **LinqSQL** .Net Framework e ASP NET Framework
+
+#### **- Criando**
 - **Objeto do tipo LinqSQL**
 > botao direito> add> LINQ to SQL Classes
 
@@ -130,10 +190,10 @@ public partial class ConfiguracaoNomeDataContext
     }
 ```
 
-### **Bll - Tratando os dados**
+#### **- Bll - Tratando os dados**
 > Aqui vamos instanciar os principais metodos para tratar os dados, lembrando que a "ConfiguracaoNomeDataContext" trata-se da abertura configurada acima e os "nome" a uma tabela.
 
-- **Exemplos:** Completo
+- **Exemplos:** 
 ``` C#
 public static List<Nome> List_nome()
     {
