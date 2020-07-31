@@ -99,20 +99,21 @@ var serializedResult = serializer.Serialize(CLASSE);
 
 - **Deserializador:** Transforma JSON em objeto
 ``` c#
-// Com NewtonSoft
-private static List<CLASS> GetCLASSs()
+public class Serializer
 {
-    var json = File.ReadAllText("NOME.json");
-    var retorno = JsonConvert.DeserializeObject<List<CLASS>>(json);
-    return retorno;
-}
+    public T GetObject<T>(string json)
+    {
+        if (!string.IsNullOrWhiteSpace(json))
+            return JsonConvert.DeserializeObject<T>(json);
+        return default(T);
+    }
 
-// OU
-
-public static CLASS GetCLASS(string json)
-{
-    var ser = new JavaScriptSerializer();
-    return ser.Deserialize<Cliente>(json);
+    public string SetObject<T>(T objeto)
+    {
+        if (objeto != null)
+            return JsonConvert.SerializeObject(objeto);
+        return null;
+    }
 }
 ```
 

@@ -9,16 +9,13 @@ public static class ConexaoBD // Nome da Class
 {
     public static SqlConnection GetConexao() // Nome do metodo
     {
-        string strCon = "Data Source=LOCALHOST;Initial Catalog=BANCO;user id=USUARIO; password=123456";            
+        string strCon = "Data Source=LOCALHOST;Initial Catalog=BANCO;user id=USUARIO; password=123456";
+        // string strCon = "Server=localhost\\SQLEXPRESS;Database=apresentacao;Integrated Security=True;";
         SqlConnection conexao = new SqlConnection(strCon);
         conexao.Open();
         return conexao;
     }
 }
-/* Data Source=IP;
-   Initial Catalog=BANCO;
-   user id=USUARIO; 
-   password="SENHA"; */
 ``` 
 
  - **Executando**

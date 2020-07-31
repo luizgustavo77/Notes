@@ -43,53 +43,22 @@ public class NOMEContext : DbContext
         optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=MEU_BANCO;Trusted_Connection=true;");
         //optionsBuilder.UseSqlServer("Server=myServerAddress;Database=myDataBase;User Id=myUsername;password=myPassword;Trusted_Connection=False;MultipleActiveResultSets=true;")
     }
+
+    // Este metodo serve como exemplo para criar o relacionamento de chave composta no padrao Migration
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder
+            .Entity<CLASSE2>()
+            .HasKey(x => new { x.CLASSE1Id, y.CLASSE2Id });
+            // podemos criar as relacoes do mapeamento aqui tambem com HasMany/HasOne
+        base.OnModelCreating(modelBuilder);
+    }
 }
 
 
 ```
 
-- **Insert**
-    - **Chamando:** com a configuração acima criada, basta usarmos as ferramentas do entity
-```c#
-CLASSE c = new CLASSE();
-using (var contexto = new NOMEContext())
-{
-    contexto.CLASSEs.Add(c);
-    contexto.SaveChanges();
-}
-```
 
-- **Select**
-    - **Chamando** com a configuração criada, basta usarmos as ferramentas do entity
-``` c#
-using (var contexto = new NOMEContext())
-{
-    IListCLASSE lista = contexto.CLASSEs.ToList();
-}
-```
-
-- **Delete**  
-     - **Chamando** com a configuração criada, basta usarmos as ferramentas do entity
-``` c#
-using (var contexto = new NOMEContext())
-{
-    CLASSE item = contexto.CLASSEs.First();
-    contexto.CLASSEs.Remove(item);        
-    contexto.SaveChanges();
-}
-```
-
-- **Update**  
-     - **Chamando** com a configuração criada, basta usarmos as ferramentas do entity
-``` c#
-using (var contexto = new NOMEContext())
-{
-    CLASSE item = contexto.CLASSEs..First();
-    item.variavel = "Atualizado";
-    contexto.CLASSEs.Update(item);
-    contexto.SaveChanges();
-}
-```
 ### **DAO**
  Para podermos criar um padrao na hora de usar criamos o DAO
 
@@ -97,51 +66,137 @@ using (var contexto = new NOMEContext())
 ```c#
  interface ICLASSEDAO
 {
-    void Adicionar(CLASSE item);
-    void Atualizar(CLASSE item);
-    void Remover(CLASSE item);
-    IListCLASSE CLASSEs();
+    RetornaAcao Adicionar(CLASSE item);
+    RetornaAcao Atualizar(CLASSE item);
+    RetornaAcao Remover(CLASSE item);
+    bool Existe(int? Id);
+    CLASSE Localizar(int? Id);
+    IList<CLASSE> ListCLASSEs();
 }
 ```
 - **Implementação:** Adicionar as ferramentas 
 ``` c#
-class CLASSEDAOEntity : ICLASSEDAO, IDisposable
+public class CLASSEDAO : ICLASSEDAO, IDisposable
 {
-    private NOMEContext contexto;
+    private DBContext _contexto;
 
-    public CLASSEDAOEntity()
+    public CLASSEDAO()
     {
-        this.contexto = new NOMEContext(); 
+        this._contexto = new DBContext();
     }
 
     public void Dispose()
     {
-        contexto.Dispose();
+        _contexto.Dispose();
     }
 
-    public void Adicionar(CLASSE item)
+    public RetornaAcao Adicionar(CLASSE item)
     {
-        contexto.CLASSEs.Add(item);
-        contexto.SaveChanges();
+        RetornaAcao retorno = new RetornaAcao();
+        try
+        {
+            _contexto.CLASSEs.Add(item);
+            _contexto.SaveChanges();
+            retorno.Retorno = true;
+            retorno.Mensagem = "Salvo com sucesso!";
+        }
+        catch (Exception ex)
+        {
+            retorno.Retorno = false;
+            retorno.Mensagem = "Erro! " + ex.Message;
+        }
+        return retorno;
     }
 
-    public void Atualizar(CLASSE item)
+    public RetornaAcao Atualizar(CLASSE item)
     {
-        contexto.CLASSEs.Update(item);
-        contexto.SaveChanges();
+        RetornaAcao retorno = new RetornaAcao();
+        try
+        {
+            _contexto.CLASSEs.Update(item);
+            _contexto.SaveChanges();
+            retorno.Retorno = true;
+            retorno.Mensagem = "Atualizado com sucesso!";
+        }
+        catch (Exception ex)
+        {
+            retorno.Retorno = false;
+            retorno.Mensagem = "Erro! " + ex.Message;
+        }
+        return retorno;
     }
 
-     public void Remover(CLASSE item)
+    public RetornaAcao Remover(CLASSE item)
     {
-        contexto.CLASSEs.Remove(item);
-        contexto.SaveChanges();
+        RetornaAcao retorno = new RetornaAcao();
+        try
+        {
+            _contexto.CLASSEs.Remove(item);
+            _contexto.SaveChanges();
+            retorno.Retorno = true;
+            retorno.Mensagem = "Excluido com sucesso!";
+        }
+        catch (Exception ex)
+        {
+            retorno.Retorno = false;
+            retorno.Mensagem = "Erro! " + ex.Message;
+        }
+        return retorno;
     }
 
-    public IListCLASSE CLASSEs()
+    public CLASSE Localizar(int? Id)
     {
-        return contexto.CLASSEs.ToList();
+        CLASSE retorno = null;
+        try
+        {
+            retorno = _contexto.CLASSEs.FirstOrDefault(x => x.Id == Id);
+        }
+        catch (Exception ex)
+        {
+
+        }
+        return retorno;
     }
+
+    public bool Existe(int? Id)
+    {
+        bool retorno = false;
+        try
+        {
+            retorno = _contexto.CLASSEs.Any(x => x.Id == Id);
+        }
+        catch (Exception ex)
+        {
+
+        }
+        return retorno;
+    }
+
+    public IList<CLASSE> ListCLASSEs()
+    {
+        IList<CLASSE> retorno = null;
+        try
+        {
+            retorno = _contexto.CLASSEs.ToList();
+        }
+        catch (Exception ex)
+        {
+
+        }
+        return retorno;
+    }    
 }
+```
+- **Core**
+``` c#
+
+// Adiciona ao Startup.cs
+public void ConfigureServices(IServiceCollection services)
+{
+    // Injecao de dependencia do DAO e da conexao do banco
+    services.AddTransient<ILoginDAO, LoginDAO>();
+    services.AddDbContext<DBContext>();
+    ...
 ```
 
 ### **Migrations** Code First 
@@ -226,34 +281,20 @@ public class CLASSE3 // Observação que aqui usamos chave composta
 
     - **Drop-Database**  dropar o banco de dados apontado pelo contexto.
 
-### **Create Database**
-> Para adicionar uma criacao do banco caso ele não exista
-
-- **DataService.cs**
-    - **Create**
-``` c#
-class DataService : IDataService
-{
-    private readonly ApplicationContext contexto;
-
-    public DataService(ApplicationContext contexto)
-        this.contexto = contexto;
-    }
-
-    public void InicializaDB()
-    {
-        contexto.Database.EnsureCreated();
-    }        
-}
-```
+### **Create Database Migrations**
+> Para adicionar uma criacao do banco caso ele não exista quando usamos o Migrations no codigo
 
 - **Startup.cs**
     - **ADD** 
 ``` C#
-//ConfigureServices
-services.AddTransient<IDataService, DataService>();
-
-//Configure
-serviceProvider.GetService<IDataService>().InicializaDB();
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+    // Roda os Migrations caso o banco de dados não exista
+    using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+    {
+        var context = serviceScope.ServiceProvider.GetRequiredService<DBContext>();
+        context.Database.Migrate();
+    }
+    ...
 ```
 

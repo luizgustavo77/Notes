@@ -502,9 +502,40 @@ firstName = (string)(Session["FirstName"]);
 
 - **Core** 
 ``` C#
-HttpContext context = HttpContext.Current;  
-context.Session["FirstName"] = firstName;  
-firstName = (string)(context.Session["FirstName"]);  
+public class Session
+{
+    private static IHttpContextAccessor _accessor;
+
+    public Session()
+    {
+        _accessor = new HttpContextAccessor();
+    }
+
+    public void Create(string key, string jsonValue)
+    {
+        _accessor.HttpContext.Session.SetString(key, jsonValue);
+    }
+
+    public string GetObject(string key)
+    {
+        return _accessor.HttpContext.Session.GetString(key);
+    }
+}
+
+// Add on Startup
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+    services.AddSession(options =>
+    {
+        options.IdleTimeout = TimeSpan.FromMinutes(1);
+    });
+    ...
+
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+    app.UseSession();
+    ...
 ```
 
 ### **Coockie**
@@ -513,7 +544,7 @@ firstName = (string)(context.Session["FirstName"]);
 ### **Cache**
 > Informações sobre a pagina da internet que você está acessando
 
-- **Exemplo**
+- **Framework**
 ``` c#
 public class Cache
 {
@@ -544,6 +575,15 @@ public class Cache
 }
 ```
 
+- **Core**
+``` c#
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+    services.AddMemoryCache();
+    ...
+```
+
 ### **View State** Obsoleto
 > Variavel que normalmente guarda informações da pagina aberta para agilizar processor ou personalizar o conteudo. **Como funciona?** salva um estado, variavel ou objeto enquanto nâo trocar de pagina.
 
@@ -558,12 +598,22 @@ Nome = ViewState["Nome"].ToString();
 
 ### **QueryString**
 > Podemos atribuir variaveis na URL e chama-las no nosso codigo
+
+- **Framework**
 ``` c#
 // Exemplo de URL
 "https://URL?VARIAVEL=VALOR"
 
 // Chamando
 string VARIAVEL = Request.QueryString["VARIAVEL"])
+```
+
+- **Core**
+```c#
+public IActionResult Index([FromQuery(Name = "id")] string id)
+{
+    return View();
+}
 ```
 
 ---
@@ -581,6 +631,56 @@ string SENHA = ConfigurationManager.AppSettings["NOME"];
     <add key="NOME" value="SENHA"/>
   </appSettings>
 </configuration>// Essa tag por padrão fecha o WebConfig
+```
+---
+
+## **AppSettings.json** Framwork
+> Podemos salvar variaveis como string no "appsettings.json" para não ter que abrir o codigo fonte na hora de editar alguma coneccao.
+
+- **Adicionando**
+``` json
+... 
+    "AllowedHosts": "*",
+    "conexao": "Server=localhost\\SQLEXPRESS;Database=apresentacao;Integrated Security=True;"
+}
+```
+
+- **Recuperando**
+``` c#
+var builder = new ConfigurationBuilder()
+.SetBasePath(Directory.GetCurrentDirectory())
+.AddJsonFile("appsettings.json");
+IConfigurationRoot Configuration = builder.Build();
+string conexao = Configuration["conexao"];
+```
+---
+## **Redirect page ERROR**
+> Adicionamos uma pagina customizada de erro no Home com o nome Error para capturar os erros
+
+- **Framework**
+``` xml
+<!-- no Web.config -->
+<configuration>
+    <system.web>
+        <customErrors mode="On" defaultRedirect="~/Home/Error">
+            <error statusCode="404" redirect="~/Home/Error" />
+        </customErrors>
+```
+
+- **Core**
+``` c#
+// Home Controler
+[Route("[controller]/Error/{statusCode}")]
+public IActionResult Error()
+{
+    return View("Error");
+}
+
+// Startup
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+    app.UseStatusCodePagesWithRedirects("/Home/Error/{0}");
+    ...
 ```
 ---
 
