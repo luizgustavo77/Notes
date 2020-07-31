@@ -689,8 +689,7 @@ public IActionResult Index([FromQuery(Name = "id")] string id)
 ```
 
 ---
-### **WebConfig** Framwork
-- **AppSettings**
+### **WebConfig** Framework
 > Podemos salvar variaveis como string no WebConfig para não ter que abrir o codigo fonte na hora de editar alguma coneccao.
 
 ``` c#
@@ -703,6 +702,27 @@ string SENHA = ConfigurationManager.AppSettings["NOME"];
     <add key="NOME" value="SENHA"/>
   </appSettings>
 </configuration>// Essa tag por padrão fecha o WebConfig
+```
+---
+
+## **AppSettings.json** Core
+> Podemos salvar variaveis como string no "appsettings.json" para não ter que abrir o codigo fonte na hora de editar alguma coneccao.
+
+- **Adicionando**
+``` json
+... 
+    "AllowedHosts": "*",
+    "conexao": "Server=localhost\\SQLEXPRESS;Database=apresentacao;Integrated Security=True;"
+}
+```
+
+- **Recuperando**
+``` c#
+var builder = new ConfigurationBuilder()
+.SetBasePath(Directory.GetCurrentDirectory())
+.AddJsonFile("appsettings.json");
+IConfigurationRoot Configuration = builder.Build();
+string conexao = Configuration["conexao"];
 ```
 ---
 ### **Identity**
@@ -939,27 +959,6 @@ public void ConfigureServices(IServiceCollection services)
         ...
 ```
 
----
-
-## **AppSettings.json** Framwork
-> Podemos salvar variaveis como string no "appsettings.json" para não ter que abrir o codigo fonte na hora de editar alguma coneccao.
-
-- **Adicionando**
-``` json
-... 
-    "AllowedHosts": "*",
-    "conexao": "Server=localhost\\SQLEXPRESS;Database=apresentacao;Integrated Security=True;"
-}
-```
-
-- **Recuperando**
-``` c#
-var builder = new ConfigurationBuilder()
-.SetBasePath(Directory.GetCurrentDirectory())
-.AddJsonFile("appsettings.json");
-IConfigurationRoot Configuration = builder.Build();
-string conexao = Configuration["conexao"];
-```
 ---
 ## **Redirect page ERROR**
 > Adicionamos uma pagina customizada de erro no Home com o nome Error para capturar os erros
