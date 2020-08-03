@@ -1557,6 +1557,11 @@ var Obj = contexto
                 .FirstOrDefault();
 ```
 
+- **Log**, receberá todos os logs do Banco de Dados
+``` c#
+CONTEXT.Database.Log
+```
+
 ---
 ## **Indexadores:**
 > É uma ferramenta muito versatil para acessar seu objeto como uma matriz. Pode ser usada para variaveis tambem.
