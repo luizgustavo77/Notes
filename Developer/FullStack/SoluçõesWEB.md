@@ -183,6 +183,25 @@ client.Dispose();
         public string uf { get; set; }
     }
 ```
+- **Verificando URL Exist**
+```
+private static bool RemoteFileExists(string url)
+{
+    try
+    {
+	HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
+	request.Method = "HEAD";
+	using (HttpWebResponse response = request.GetResponse() as HttpWebResponse)
+	{
+	    return (response.StatusCode == HttpStatusCode.OK);
+	}
+    }
+    catch
+    {
+	return false;
+    }
+}
+```
 ---
 ## **Ajax SZ WebForms**
 
