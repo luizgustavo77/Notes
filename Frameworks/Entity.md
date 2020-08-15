@@ -199,6 +199,48 @@ public void ConfigureServices(IServiceCollection services)
     ...
 ```
 
+- **Cascade**
+> Exemplo de cascade
+``` c#
+// Objetos
+public class User
+{
+    public int ID { get; set; }
+    public string EmailAddress { get; set; }
+    public virtual ICollection<Address> Addresses { get; set; }
+}
+
+public class Address
+{
+    public int ID { get; set; }
+    public string City { get; set; }
+    public string Street { get; set; }
+    public string Postcode { get; set; }
+}
+
+// DBCONTEXT
+class TestDbContext : DbContext
+{
+    public TestDbContext()
+        : base("DefaultConnectionString")
+    {
+    }
+    public DbSet<User> Users { get; set; }
+    public DbSet<Address> Addresses { get; set; }
+}
+
+// SAVE
+var context = new TestDbContext();
+var user = context.Users.FirstOrDefault(item => item.ID == 1);
+user.Addresses.Add(new Address()
+{
+    City = "City",
+    Street = "Street",
+    Postcode = "Postcode",
+});
+context.SaveChanges();
+```
+
 ### **Migrations** Code First 
  > Extensão do Entity para sincroniza o ambiente de desenvolvimento com o Banco de Dados, ele identifica automaticamente com base no "DbSet< CLASSE > NOME"  implementados ele ou objetos telacionados no Entity ao banco 
 
