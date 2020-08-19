@@ -590,6 +590,13 @@ CLASSE retorno = new CLASSE();
 
 dicionario.TryGetValue(0, out retorno);
 ```
+- **Lambda**
+``` c#
+Dictionary<int, string> dictionary = objects
+    .Select(x=> new KeyValuePair<int, string>(x.Id, x.Name))
+    .ToDictionary(x=>x.Key, x=>x.Value);
+```
+
 ---
 
 ## **Programacao Orientada a Objetos**
