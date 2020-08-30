@@ -440,6 +440,16 @@ public ActionResult NOME(string NOMEVAR)
     // Codigo
 }
 ```
+- **HTTPClient** define configurações sobre requisições ao controller
+
+``` C#
+// Usei o Get como exemplo mais essa configuração funciona para qualquer tipo de requisição
+[HttpGet("{id}", Name="GetCategoria")]
+public async Task Get(int id)
+{
+    . . .
+
+```
 
 - **Autorização**
 ``` c#

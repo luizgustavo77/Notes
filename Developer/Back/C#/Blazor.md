@@ -50,19 +50,17 @@
 |Pode ser servidor CDN|X|Precisa de um servidor|
 
 ---
-### **Blazor Server App VS Blazor WebAssembly APP**
-> Ambos sao projetos blazor, mas o framework oferece essas duas opcoes
+## **Blazor Server App VS Blazor WebAssembly APP**
+> Ambos sao projetos blazor, mas o framework oferece essas duas opcoes. Voltadas para projetos monoliticos
+
 
 - **Blazor Server App**, Client-Side
 
     Apenas arquivos staticos e codigos C#, podemos fazer requisicoes WEB API
 
     - **Data** Funciona como Model e Controller
-
     - **Pages/_Host.cshtml** Inicia o projeto 
-
-    - **Appsettings.json** Tem configuracoes da requisicao
-    
+    - **Appsettings.json** Tem configuracoes da requisicao    
     - **Program.cs** Define a utilizacao do Startup e o HostBuilder
 
     - **Startup.cs** 
@@ -79,7 +77,6 @@
             **"MapFallbackToPage("/_Host")";** Define pagina que o programa vai iniciar
 
     - **_Host** Define o App.razor 
-
     - **App.razor** Define o roteamento para as paginas
 
 - **Blazor WebAssembly**, Server-Side (Client-Side + .Net Core)
@@ -87,34 +84,85 @@
     Faz o cliente-side e chama as API de um ASP NET Core
 
     - **wwwroot/index.html** Inicia o projeto 
-
     - **Program.cs** Define a utilizacao do arquivo raiz App.razor
 
+---
+## **Blazor WebAssembly APP + Progressive Web Application**
+> Para paginas simples o projeto iniciasem uma opção para tratar dados. Somente telas.
+
+- **wwwroot/index.html** Inicia o projeto 
+- **Program.cs** Define a utilizacao do arquivo raiz App.razor
 
 ---
 
-## **Blazor WebAssembly App**
+## **Blazor WebAssembly App + ASP.NET Core hosted**
+> Modelo pronto para Microservicos
 
-- **Instalando** o template do Blazor WebAssembly APP usando o Developer Command Prompt
+- **Instalando o Template usando o Developer Command Prompt**
     - dotnet new --install Microsoft.AspNetCore.Blazor.Templates::3.1.0-preview4.19579.2
-
-### **Template, Blazor WebAssembly App Com o check "ASP NET Core hosted**
-> Quando marcado segue o modelo **Client-Side + .Net Core** criando Client, Server e Shared (Comom). Nessa hospedagem a aplicação nao roda offiline 
 
 ### **Client**
 > Aqui temos a aplicação Blazor e as paginas com Razor
-
+- **Arquitetura**    
+    - **Properties/launchSettings.json** Define configurações sobre como vai trabalhar
+    - **wwwroot**
+        - **css** arquivos de css
+        - **index.html** Inicia o projeto 
+    - **Pages** Paginas Razor
+    - **Shared** Paginas comuns do site
+    - **_Imports.razor** Tem os namespaces comuns do projeto
+    - **App.razor** Configura as rotas solicitadas pela URL
+    - **Program.cs** Define a utilizacao do arquivo raiz App.razor
 
 ### **Server**
 > Aqui criamos as WEB API's e conectamos a Base de dados 
+- **Dependencias**, para usar banco de dados e code first
+    - Microsoft.EntityFrameworkCore.SqlServer
+    - Microsoft.EntityFrameworkCore.Tools
 
+- **Arquitetura**
+    - **dbContext** adicionamos a conexão com o banco. Use Entity Framework
+    - **Models/NOME** entidades que espelham oque temos no banco. Use Entity Framework
+    - **Services/NOME** criamos o tratamento de dados com as bll
+    - **Controllers** aqui vamos expor nossa aplicação
+    - **Properties/launchSettings.json** Define configurações sobre como vai trabalhar
+    - **appsettings.json** adicionamos a string de conexao
+
+- **Migrations**
+    - **Default project** NOME.Server
+
+- **Adicionar configurações abaixo**
+``` c#
+// No appsettings.json
+  . . .
+  "ConnectionStrings": {
+    "DefaultConnection": "CONEXAO"
+  }
+}
+
+// No Startup
+public class Startup
+{
+    public IConfiguration Configuration { get; }
+    public Startup(IConfiguration configuration)
+    {
+        this.Configuration = configuration;
+    }
+
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.addDBContext<dbContext>(options => 
+        options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+```
 
 ### **Shared**
 > É um mediador que tem codigos compartilhados com Client e Server
+- **Arquitetura**
+    - **ModelsDTO/NOME** Criamos os DTO's e componentes comuns como disparo de EMail
 
 ---
 
-## **Paginas Blazor**
+## **Paginas padrão de projetos Blazor**
 
 
 - **_Host.cshtml / index.html** Dentro dele temo um script que habilita o SignalIR  no blazor "< script src="_framework/blazor.webassebly.js"></script>" e ponta e carrega o App.razor
@@ -415,6 +463,14 @@ public class Calculo
 
     . . .
 ```
+---
+## **Helpers HTTPClient Json**
+> Metodos para fazer requisições no padrão REST e retornar os em Json.
+
+- GetJsonAsync())
+- PostJsonAsync
+- PutJsonAsync
+- DeleteAsync, esse ultimo não faz parte mas ele fecha os requisitos para ser um REST
 
 ---
 ## **Formulario** EditForm
@@ -767,4 +823,252 @@ window.FUNÇÃO_NO_JS = (message) => {
 await js.InvokeAsync<object>("FUNÇÃO_NO_JS", "ARGUMENTOS");
 await js.InvokeVoidAsync("FUNÇÃO_NO_JS", "ARGUMENTOS");
 var resultado = ((IJSInProcessRuntime)js).Invoke<bool>("FUNÇÃO_NO_JS", "ARGUMENTOS");
+```
+
+--- 
+
+## **Exemplos**
+> Códigos prontos para reutilizar
+
+- **Popup** Usando bootstrap
+
+``` c#
+// Criando
+@if (ExibirConfirmacao)
+{
+    <div class="modal-backdrop show"></div>
+
+    <div class="modal" tabindex="-1" role="dialog"
+         aria-hidden="true" style="display:block;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@Titulo</h5>
+                    <button @onclick="onCancela" type="button" class="close"
+                            data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @ChildContent
+                </div>
+                <div class="modal-footer">
+                    <button @onclick="onCancela" type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button @onclick="onConfirma" type="button"
+                            class="btn btn-primary">
+                        OK
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+
+    [Parameter] public bool ExibirConfirmacao { get; set; } = false;
+    [Parameter] public string Titulo { get; set; };    
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public EventCallback onConfirma { get; set; }
+    [Parameter] public EventCallback onCancela { get; set; }
+
+    public void Exibir() => ExibirConfirmacao = true;
+    public void Ocultar() => ExibirConfirmacao = false;
+}
+
+// Usando
+<a class="btn btn-danger" @onclick="@(()=> AbrirPopup())">Abrir Popup </a>
+
+<Confirma @ref="confirma" onCancela="@CancelaConfirma" onConfirma="@SalvarConfirma">
+    <div> OQUE EU QUISER DENTRO DO POPUP </div>
+</Confirma>
+
+@code {
+
+    Confirma confirma;
+
+    void AbrirPopup(int categoriaId)
+    {
+        confirma.Exibir();
+    }
+
+    async Task SalvarConfirma()
+    {
+        confirma.Ocultar();
+    }
+
+    void CancelaConfirma()
+    {
+        confirma.Ocultar();
+    }
+}
+```
+
+- **Paginação** Usando bootstrap. Podemos definir a quantidade de itens que um metodo vai retornar e carregar os proximos depois
+``` c#
+// Dentro de Shared/Recursos
+public class Paginacao
+{
+    public int Pagina { get; set; } = 1;
+    public int QuantidadePorPagina { get; set; } = 5;
+}
+
+// Dentro de Server/Utils
+public static class QueryableExtensions
+{
+    public static IQueryable<T> Paginar<T>(this IQueryable<T> queryable, Paginacao paginacao)
+    {
+        return queryable
+            .Skip((paginacao.Pagina - 1) * paginacao.QuantidadePorPagina)
+            .Take(paginacao.QuantidadePorPagina);
+    }
+}
+
+public static class HttpContextExtensions
+{
+    public async static Task InserirParametroEmPageResponse<T>(this HttpContext context,
+        IQueryable<T> queryable, int quantidadeTotalRegistrosAExibir)
+    {
+        if (context == null)
+        {
+            throw new ArgumentNullException(nameof(context));
+        }
+
+        double quantidadeRegistrosTotal = await queryable.CountAsync();
+        double totalPaginas = Math.Ceiling(quantidadeRegistrosTotal / quantidadeTotalRegistrosAExibir);
+
+        //salvando as informações no header do response
+        context.Response.Headers.Add("quantidadeRegistrosTotal", quantidadeRegistrosTotal.ToString());
+        context.Response.Headers.Add("totalPaginas", totalPaginas.ToString());
+    }
+}
+
+// Dentro do Server
+[HttpGet]
+public async Task<ActionResult<List<CLASSE>>> Get([FromQuery] Paginacao paginacao)
+{
+    var queryable = context.CLASSESs.AsQueryable();
+    
+    await HttpContext.InserirParametroEmPageResponse(queryable, paginacao.QuantidadePorPagina);
+    
+    return await queryable.Paginar(paginacao).ToListAsync();
+}
+
+// Dentro do Cliente
+// Shared
+@code {
+
+    [Parameter] public int paginaAtual { get; set; } = 1;
+    [Parameter] public int QuantidadeTotalPaginas { get; set; }
+    [Parameter] public int Raio { get; set; } = 3;
+    [Parameter] public EventCallback<int> PaginaSelecionada  { get; set; }
+
+    List<LinkModel> links;
+
+    class LinkModel
+    {
+        public LinkModel(int page) : this(page, true)
+        { }
+
+        public LinkModel(int page, bool enabled) : this(page, enabled, page.ToString())
+        { }
+
+        public LinkModel(int page, bool enabled, string text)
+        {
+            Page = page;
+            Enabled = enabled;
+            Text = text;
+        }
+
+        public string Text { get; set; }
+        public int Page { get; set; }
+        public bool Enabled { get; set; } = true;
+        public bool Active { get; set; } = false;
+    }
+
+    protected override void OnParametersSet()
+    {
+        CarregaPaginas();
+    }
+
+
+    private void CarregaPaginas()
+    {
+        links = new List<LinkModel>();
+
+        //tratar o link da pagina anterior
+        var isLinkPaginaAnteriorHabilitado = paginaAtual != 1;
+        var paginaAnterior = paginaAtual - 1;
+
+        links.Add(new LinkModel(paginaAnterior, isLinkPaginaAnteriorHabilitado, "Anterior"));
+
+        //trata os links das paginas especificas
+        for(int i=1; i<= QuantidadeTotalPaginas; i++)
+        {
+            if (i >= paginaAtual - Raio && i <= paginaAtual + Raio)
+            {
+                links.Add(new LinkModel(i)
+                {
+                    Active = paginaAtual == i
+                });
+            }
+        }
+
+        //trata o link para a proxima pagina
+         var isLinkProximaPaginaHabilitado = paginaAtual != QuantidadeTotalPaginas;
+        var proximaPagina = paginaAtual + 1;
+
+        links.Add(new LinkModel(proximaPagina, isLinkProximaPaginaHabilitado, "Próximo"));
+    }
+}
+// Pages
+<hr />
+
+<Paginacao  QuantidadeTotalPaginas="QuantidadeTotalPaginas" paginaAtual="paginaAtual"
+           Raio="2" PaginaSelecionada="PaginaSelecionada">
+</Paginacao>
+
+
+@code {
+
+    List<CLASSE> CLASSEs { get; set; }
+
+    private int QuantidadeTotalPaginas;
+    private int paginaAtual = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CarregaCLASSEs();
+    }
+
+    private async Task PaginaSelecionada(int pagina)
+    {
+        paginaAtual = pagina;
+        await CarregaCLASSEs(pagina);
+    }
+
+    async Task CarregaCLASSEs(int pagina=1, int quantidadePorPagina= 5)
+    {
+
+        var httpResponse =
+            await http.GetAsync($"api/CLASSE?pagina={pagina}&quantidadePorPagina={quantidadePorPagina}");
+
+        if(httpResponse.IsSuccessStatusCode)
+        {
+            QuantidadeTotalPaginas =
+                int.Parse(httpResponse.Headers.GetValues("totalPaginas").FirstOrDefault());
+
+            var responseString = await httpResponse.Content.ReadAsStringAsync();
+
+            CLASSEs = JsonSerializer.Deserialize<List<CLASSE>>(responseString,
+                new JsonSerializerOptions()
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+        }
+    }    
+}
 ```
