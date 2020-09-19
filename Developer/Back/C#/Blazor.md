@@ -364,7 +364,7 @@ public class Calculo
 @code {
     // Adicionamos o evento aqui para ter uma referencia que quando criarmos o filho temos que passar esse metodo
     [Parameter]
-    public EventCallBack<CLASSE> METODO {get; set;}
+    public EventCallback<CLASSE> METODO {get; set;}
 ```
 ### **Argumentos**
 - [**Documento**](https://docs.microsoft.com/pt-br/aspnet/core/blazor/components/event-handling)
