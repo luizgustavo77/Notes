@@ -336,6 +336,41 @@ public class Calculo
 <input @bind="@CurrentValue" 
        @bind-value:event="oninput" />
 ```
+- **Criando Bind-Value**
+    - **Listas** Quando trabalhar com listas envie a lista inteira para o componente e se preciar alterar algum elemento mesmo que consiga trazer somente aquele elemento faça as alterações dentro do "foreach" usando linq para agilizar a consulta
+``` c#
+// - Criando
+@code {
+    private bool _Show = false;
+
+    [Parameter]
+    public EventCallback<bool> ShowChanged { get; set; }
+
+    [Parameter]
+    public bool Show
+    {
+        get => _Show;
+        set
+        {
+            if (_Show == value) return;
+            _Show = value;
+            ShowChanged.InvokeAsync(value);
+        }
+    }
+...
+
+// - Atalizando valor no pai
+protected async Task ChangeValue()
+{
+    Show = false;   
+    ShowChanged.InvokeAsync(Show);
+}
+
+// - Chamando
+<Project.Pages.MyPage @bind-Show="MyBoolValue" />
+// Caso não funcione teste remover o "@bind-" da syntax... Mas o correto é funcionar assim, só ocorreu um caso de trocar dessa forma e funcionar
+```
+
 ---
 ## **Eventos**
 ### **EventCallBack**
