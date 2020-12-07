@@ -1304,3 +1304,10 @@ SELECT name, LOGINPROPERTY(nome, 'TIPO_DE_PROPRIEDADE') FROM master.sys.sql_logi
 
 - Incluir no comando SQL o Plano de consulta
   - ctrl + m, e na resposta do servidor podemos ver o plano de cunsulta 
+  
+## **SSMS**
+> Interface de acesso que auxilia no uso do banco de dados e escrita dos SQL
+
+- **Editando script** Ele pode fazer consultas e alterações sem a necessidade de escrever o SQL
+	- **Editando o SQL do script:** CTRL + 3 retorna o SQL usado pelo SSMS
+	- **Rodando script:** CTRL + R ele consulta novamente com as alterações
