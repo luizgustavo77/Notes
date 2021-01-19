@@ -2,9 +2,10 @@
 > Gerenciador de projetos onde podemos publicar nossas aplicações
 
 - **POOL** E um container onde rodamos nossa aplicação, o correto é ter um POOL por aplicação
-    - **Opções:** Existem configurações personalizadas que podemos atribuir a cada POOL   
-    **Anonimo** Podemos remover a opção de acessar a pagina como anonimo   
-    **Windows Autenticator** Precisamos habilitar essa opção para permitir a aplicação de pegar o usuario logado
+    
+- **SITE** Existem configurações personalizadas que podemos atribuir a cada POOL   
+    - **Anonimo** Podemos remover a opção de acessar a pagina como anonimo   
+    - **Windows Autenticator** Precisamos habilitar essa opção para permitir a aplicação de pegar o usuario logado
 
 - **Create Profile** 
     1. **Profile Name** - add o nome do profile
