@@ -62,6 +62,30 @@ private void ValidaDados(CLASSE Objeto)
        ModelState.AddModelError("NOME", "Preencha NOME.");
 }
 ```
+> Outra forma de montar essa validação
+``` c#
+<style>
+.field-validation-error {
+    color: red;
+}
+</style>
+@Html.PasswordFor(model => model.ConfirmarSenha, new { @minLength = "6", @id = "confirmarSenhaAluno", @class = "form-control input-lg", @placeHolder = "Confirmar Senha" })
+@Html.ValidationMessageFor(x => x.ConfirmarSenha)
+
+// No controller
+public ActionResult Cadastro(RedefinirSenhaViewModel model)
+{
+  if (!model.Senha.Equals(model.ConfirmarSenha))
+  {
+    ModelState.AddModelError("ConfirmarSenha", "As senhas estão divergentes.");
+  }
+
+  if (!ModelState.IsValid)
+  {
+    return PartialView("Index", model);
+  }
+// ...
+```
 ---
 ### **Inserir imagens no banco com WEB**
 
