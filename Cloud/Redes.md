@@ -68,3 +68,35 @@
 - **ETL  Extract Transform Load (Extrair Transformar Carregar)**   
 > São ferramentas de software cuja função é a extração de dados de diversos sistemas, transformação desses dados conforme regras de negócios e por fim o carregamento dos dados
 
+---
+
+### **Protocolo HTTP**
+
+- **TCP**
+> Antes de efetuar a requisição o tem uma identificação entre CLIENT - SERVER para identificar as requisições
+
+- **Função do HTTP**
+
+  Definir um modelo que os dados vão seguir para trafegar 
+
+- **Cabeçarios**
+  - **Geral**
+    - **Request URL:** Endereço do servidor
+    - **Request Method:** Tipo de requisição
+    - **Status Code:** Status do retorno
+    - **Remote Adress:** IP servidor
+  - **Headers**
+    - **content-encoding:** Formato do retorno
+    - **content-lenght:** Tamanho do retorno
+    - **content-type:** Tipo de retorno
+    - **date:** Hora de saida da requisição
+    - **expires:** Hora pra timeout
+    - **server:** Ferramenta que fez a requisição (ex: Google)
+    - **location:** Indica em caso de redirecionamento (3xx), para ponde o cliente vai ser redirecionado
+  - **Form Data**
+    - Aqui temos o json com o objeto em requisições do tipo post
+
+
+
+- **Como funciona a requisição para um conteudo HTML?**
+> Na verdade quando fazemos uma requisição HTML o primeiro retorno trás apenas o texto com o html e para cada dependencia como imagens, css, js, etc... O navegador vai realizar mais uma requisição
