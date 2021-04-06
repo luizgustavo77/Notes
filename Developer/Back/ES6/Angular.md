@@ -8,6 +8,15 @@
 ### **Componentes**
 > Tudo funciona como uma componente que deve ser renderizado dentro da pagina
 
+- **Criando**
+``` html
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html'
+})
+```
+
+- **Usando**
 ``` html
 <body>
     <app-root>Loading...</app-root>
