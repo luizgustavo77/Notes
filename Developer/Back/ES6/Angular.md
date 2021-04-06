@@ -12,7 +12,8 @@
 ``` html
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html'
+  templateUrl: './app.component.html',
+  styleUrls: ['./nav-menu.component.css']
 })
 ```
 
