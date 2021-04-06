@@ -23,3 +23,11 @@
     <app-root>Loading...</app-root>
 </body>
 ``` 
+
+### **Data Binding**
+> Adiciona uma variavel dentro do dom para ter um conteudo dinamico
+
+- **Usando**
+``` html
+{{ NomeVariavel }}
+```
