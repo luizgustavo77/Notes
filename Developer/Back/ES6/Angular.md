@@ -1,24 +1,67 @@
 # **Angular**
 > Framework para front-end
 
-### **Estrutura**
+## **Angular CLI**
+> É uma ferramenta que auxilia na hora de constuir um projeto usando Angular
 
-- **SRC** Repositorio onde salvamos os arquivos
+- **Instalando**
+``` powershell
+npm install -g @angular/cli
+```
+
+- **Usando**
+``` powershell
+ng new NOME
+```
+
+- **Iniciando servidor**
+
+    Entre na pasta do projeto antes de rodar. EX: cd NOME\
+
+``` powershell
+ng serve --open
+```
+---
+## **Adicionando dependencias no projeto**
+>Entre na pasta do projeto antes de rodar. EX: cd NOME\
+
+``` shell
+npm install bootstrap@4.1.1
+```
+
+- Dessa forma adicionamos a dependencia no node_modules, agora basta referenciar no **package.json** o arquivo
+
+``` json
+"styles": [
+    "src/styles.css",
+    "./node_modules/bootstrap/dist/css/bootstrap.min.css"
+],
+```
+
+
+---
+## **Estrutura**
+
+- **src** 
+    - **app** Repositorio onde salvamos os arquivos
+        - **nome**
+            - **Arquivo TS:**   nome.component.ts
+            - **Classe:** NomeComponent
+            - **HTML:** nome.component.html
+            - **CSS:** nome.component.css
+            - **Service:** nome.service.ts
+            - **Entity:** nome.ts
+
 - **angular.json** Contem configurações do projeto
     - **"styles":** Define arquivos de css comuns no projeto
     - **"scripts":** Define arquivos de js comuns no projeto
 - **package.json** Contem as dependencias do projeto
 
-- **Nomenclatura**
-    - **Arquivo TS:**   nome.component.ts
-    - **Classe:** NomeComponent
-    - **HTML:** nome.component.html
-    - **CSS:** nome.component.css
 ---
 ## **Componentes**
 > Tudo funciona como uma componente que deve ser renderizado dentro da pagina e obrigatoriamente ele tem que pertencer a um modulo
 
-- **Criando**
+- **Criando** Lembre de adicionar no Module após criar
 ``` ts
 @Component({
   selector: 'app-root',
@@ -76,8 +119,11 @@ import { NomesModule } from './nome/nome.module';
 ...
 ```
 
+### - **Ciclo de vida**
+> Metodos default ao iniciar o componente
+---
 
-### - **Data Binding**
+## **Data Binding**
 > Adiciona uma variavel dentro do dom para ter um conteudo de uma tag
 
 - **Criando**
@@ -143,7 +189,8 @@ export class NomeComponent {
 ``` ts
 <ap-nome url="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Sultan_the_Barbary_Lion.jpg/440px-Sultan_the_Barbary_Lion.jpg" description="Leão"></ap-nome>
 ```
-
+---
+## **Laços de repetição**
 ### - **For**
 
 - **Usando**
@@ -168,3 +215,112 @@ NomeLista = [
 >
 </ap-photo>
 ```
+---
+## **HTTP**
+> Como utilizar recursos **HTTP**
+
+- **Adicionando Modulo**
+``` ts
+import { HttpClient } from '@angular/common/http';
+
+...
+@NgModule({
+    declarations: [
+        ...
+    ],
+    imports: [
+        BrowserModule,
+        NomesModule
+        // Esse imports definq que quando uma classe dentro do projeto que tiver o import necessário (import { HttpClient } from '@angular/common/http';) podemos solicitar para o servidor o HttpClient que o Angular vai saber responder
+    ],
+...
+```
+
+- **Criando**
+``` ts
+import { HttpClient } from '@angular/common/http';
+
+export class NomeComponent {
+
+    nomeLista = [];
+    constructor(http: HttpClient) {
+    console.log(http);
+}
+
+}
+```
+
+- **Get**
+``` ts
+import { HttpClient } from '@angular/common/http';
+
+export class NomeComponent {
+    photos: Object[] = [];
+
+    constructor(http:HttpClient) {
+       http
+        .get<Object[]>('http://localhost:3000/flavio/photos')
+        .subscribe(x => this.photos = x,
+                        err => console.log(err));
+    }
+}
+```
+
+---
+
+## **Service**
+
+- **Criando**
+``` ts
+import { HttpClient } from '@angular/common/http';
+
+const API = "http://localhost:3000/";
+
+@Injectable({ providedIn: 'root' }) 
+// o @Injectable define a injeção de dependencia para esse cara
+// o 'root' define que quando for criado vai ser no escopo raiz
+export class NomeService {
+        constructor(private http: HttpClient) {
+            this.http = http;
+        }
+
+        listFromUser(userName: string) {
+            return this.http
+                                .get<Object[]>(userName + '/photos');
+        }
+}
+```
+
+- **Usando**
+``` ts
+export class NomeComponent {
+    photos: Object[] = [];
+
+    constructor(nomeService: NomeService) {
+        nomeService.listFromUser('LG') 
+        .subscribe(x => this.photos = x,
+                        err => console.log(err));
+    }
+}
+```
+
+---
+
+## **Tipando**
+> Entidades para nosso código
+
+- **Criando**
+``` ts
+export interface Nome {
+    id:number;
+    postDate:Date;
+    url:string;
+    description:string;
+    allowComments:boolean;
+    likes:number;
+    comments:number;
+    userId:number;
+}
+```
+---
+
