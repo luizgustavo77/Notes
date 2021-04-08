@@ -8,7 +8,7 @@
 
 - npm init
     - vai criar o arquivo package.json, e aqui vamos listar as dependencias 
-- npm install npm install typescript@NumeroVersao --save-dev
+- npm install typescript@NumeroVersao --save-dev
     - Adiciona ao projeto as dependencias do typescript, alem da pasta node_modules que tras o compilador do typescript para javascript
     
     Esses passos vao criar os arquivos para compilar o TypeScript 
@@ -47,7 +47,7 @@
 ```
  - **Roda compilador**
     - npm run compile
-    - npm start, essa opção precisamos ter configurado no package.json
+    - npm start, essa opção precisamos ter configurado no package.json ("start": "tsc -w" )
 ---
 
 - **Arquitetura**
