@@ -18,9 +18,23 @@ ng new NOME
 
     Entre na pasta do projeto antes de rodar. EX: cd NOME\
 
+    - **ERRO** angular-devkit/build-angular/package.json
+        - **Rodar** npm install --save-dev @angular-devkit/build-angular
+
+
 ``` powershell
 ng serve --open
 ```
+
+- **Rodando novas aplicações**
+``` shell
+npm install
+
+ng update
+
+npm update
+```
+
 ---
 ## **Adicionando dependencias no projeto**
 >Entre na pasta do projeto antes de rodar. EX: cd NOME\
@@ -68,6 +82,11 @@ npm install bootstrap@4.1.1
   templateUrl: './app.component.html',
   styleUrls: ['./nav-menu.component.css']
 })
+```
+
+- **Criando via terminal**
+``` shell
+ng generate component CAMINHO/nome
 ```
 
 - **Usando**
@@ -121,6 +140,22 @@ import { NomesModule } from './nome/nome.module';
 
 ### - **Ciclo de vida**
 > Metodos default ao iniciar o componente
+
+- ngOnInit
+
+``` ts
+export class NomeComponent implements OnInit{
+
+    ngOnInit(): void{
+    ...
+        // Codigo para rodar ao iniciar o componente
+    ...
+    }
+
+...
+}
+```
+
 ---
 
 ## **Data Binding**
@@ -324,3 +359,22 @@ export interface Nome {
 ```
 ---
 
+- **Single Page Application**
+> Como passar apenas uma rota para nossa pagina e não renderizar um componente para chamar
+
+- **CommonModule**
+
+    Biblioteca derivada do **BrowserModule** que o **app.component.ts** importa, ela é necessária para transformar codigos de Angular (NgIf, NgFor, NgForOf etc), em HTML
+
+    No nosso modulo temos um **nome.module.ts** que vai ser responsavel por exportar os componentes necessários para aquelas paginas e ele vai receber o CommonModule
+
+``` ts
+import { CommonModule } from '@angular/common';
+
+@NgModule({
+...
+    imports: [
+        CommonModule
+...
+})
+```
