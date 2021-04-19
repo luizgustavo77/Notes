@@ -7,7 +7,8 @@
 **Minhas config**  
 ``` txt
 {
-    "breadcrumbs.enabled": true,
+    "git.autofetch": true,
+    "workbench.iconTheme": "material-icon-theme","breadcrumbs.enabled": true,
     "debug.toolBarLocation": "floating",
     //"editor.autoIndent": true,
     "editor.codeLens": false,
@@ -35,7 +36,6 @@
         "titleBar.activeForeground": "#41b4d1"
     },
     "explorer.confirmDelete": false,
-    "git.autofetch": true,
     "git.enableSmartCommit": true,
     "editor.wordWrap": "on",
     "editor.renderWhitespace": "boundary",
@@ -48,6 +48,11 @@
             "todo": "Projetos"
         },
         "maxExportNameLength": 9999
+    },
+    "launch": {
+
+        "configurations": [],
+        "compounds": []
     }
 }
 ```
