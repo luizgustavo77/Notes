@@ -53,6 +53,20 @@ npm install bootstrap@4.1.1
 ],
 ```
 
+---
+## **Debugger**
+> Configurações para o Angular debugger no vscode
+
+``` json
+"configurations": [
+    {
+        "type": "pwa-chrome",
+        "request": "launch",
+        "name": "Angular debugger",
+        "url": "http://localhost:4200/"
+    }
+]
+```
 
 ---
 
@@ -121,15 +135,9 @@ ng generate component CAMINHO/nome
 ### **- Module**
 > Atribui os componentes no "@NgModule" para ele ser visivel dentro da aplicação 
 
-- **Usando**
-``` ts
-...
-import { NomeComponent } from './nome/nome.component';
-
-@NgModule({
-    declarations: [
-        NomeComponent,
-...
+- **Criando via terminal**
+``` shell
+ng generate module nome
 ```
 
 - **Criando**
@@ -161,9 +169,15 @@ import { NomesModule } from './nome/nome.module';
 ...
 ```
 
-- **Criando via terminal**
-``` shell
-ng generate module nome
+- **Usando**
+``` ts
+...
+import { NomeComponent } from './nome/nome.component';
+
+@NgModule({
+    declarations: [
+        NomeComponent,
+...
 ```
 
 ### **- Ciclo de vida**
