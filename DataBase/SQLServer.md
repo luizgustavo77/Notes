@@ -887,7 +887,7 @@ ALTER TABLE SCHEMA.TABELA ADD  DEFAULT (NEXT VALUE FOR SCHEMA.SeqNOME) FOR COLUN
 GO
 ```
 ---
-## **Transaquition**
+## **Transaction**
 - **Commit** sobe as alteracoes
 - **Rollback** nao sobe nenhuma alteracao
 > propriedade da Microsoft, tem por objetivo preservar a integridade e a consistência dos dados
