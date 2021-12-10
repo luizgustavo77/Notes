@@ -2422,4 +2422,19 @@ Console.WriteLine(g);
 // Mostrando
 Console.WriteLine(Guid.NewGuid());
 ```
-```
+
+---
+
+---
+
+### **Injeção de dependencia**
+> Tipos de injeção de Dependência do ASP.NET Core
+  
+- **Transient**
+A cada chamada todos os objetos são criados novamente, ou seja, cada vez que chamamos a nossa aplicação, tudo é instanciado de novo, nenhum estado é mantido.
+
+- **Scoped**
+Os objetos são compartilhados dentro de uma mesma chamada, ou seja, todas as instâncias do objeto serão mantidas enquanto durar a chamada. Isto significa que se você usa um mesmo objeto em vários momentos do código, dentro de um mesmo fluxo de chamada, este objeto poderá manter a mesma instância.
+
+- **Singleton**
+Os objetos serão compartilhados por todas a aplicação, independente da chamada, ou seja, sempre iremos acessar o mesmo objeto, incusive independente do usuário. Então cuidado com isto!
