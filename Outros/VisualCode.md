@@ -5,55 +5,116 @@
 * crtl+d - seleciona algo aperta crtl+d e vai fazer replace em todos os semelhantes   
 
 **Minhas config**  
-``` txt
+``` json
 {
-    "git.autofetch": true,
-    "workbench.iconTheme": "material-icon-theme","breadcrumbs.enabled": true,
+    "breadcrumbs.enabled": true,
+
     "debug.toolBarLocation": "floating",
+
     //"editor.autoIndent": true,
+
     "editor.codeLens": false,
+
     "editor.cursorBlinking": "smooth",
+
     "editor.cursorStyle": "line",
+
     "editor.fontSize": 16,
+
     "editor.fontFamily": "'Dank Mono', 'Operator Mono', 'Fira Code'",
+
     "editor.fontLigatures": true,
+
     "editor.formatOnPaste": true,
+
     "editor.formatOnType": false,
+
     "editor.formatOnSave": true,
+
     "editor.letterSpacing": 0.5,
+
     "editor.lineHeight": 25,
+
     "files.autoSave": "afterDelay",
+
     "files.autoSaveDelay": 1000,
+
     "search.showLineNumbers": true,
+
     //"workbench.iconTheme": "material-icon-theme",
+
     "workbench.colorTheme": "Winter is Coming (Dark Blue)",
-    "zenMode.centerLayout": false,
+
+   "zenMode.centerLayout": false,
+
     "terminal.integrated.fontFamily": "monospace",
+
     "whiteviz.overrideDefault": true,
+
     "window.titleBarStyle": "custom",
+
     "workbench.colorCustomizations": {
+
         "titleBar.activeBackground": "#021549",
+
         "titleBar.activeForeground": "#41b4d1"
+
     },
+
     "explorer.confirmDelete": false,
+
+    "git.autofetch": true,
+
     "git.enableSmartCommit": true,
+
     "editor.wordWrap": "on",
+
     "editor.renderWhitespace": "boundary",
+
     "kanban": {
+
         "trackTime": true,
+
         "columns": {
+
             "done": "Feito!",
+
             "inProgress": "Em Andamento",
+
             "testing": "Analise",
+
             "todo": "Projetos"
+
         },
-        "maxExportNameLength": 9999
+
+       "maxExportNameLength": 9999
+
     },
+
+    "workbench.iconTheme": "material-icon-theme",
+
+    "git.confirmSync": false,
+
     "launch": {
 
+       
+
         "configurations": [],
+
         "compounds": []
-    }
+
+    },
+
+    "extensions.confirmedUriHandlerExtensionIds": [],
+
+    "editor.codeActionsOnSave": {
+
+        "source.organizeImports": true
+
+    },
+
+    "html.format.indentInnerHtml": true
+
 }
 ```
 * emmets - (atalhos) ISSO E UM CAPETA PARA DEV PQP
