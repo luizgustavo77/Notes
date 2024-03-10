@@ -16,6 +16,7 @@ kubectl get nodes
 ### Install Istio
 
 - <https://istio.io/latest/docs/setup/getting-started//>
+- [profiles](https://istio.io/latest/docs/setup/additional-setup/config-profiles/)
 
 ``` shell script
 ### Usuario root
@@ -94,6 +95,215 @@ kubectl get virtualservice bookinfo -o yaml
 ```shell script
 kubectl get destinationrules reviews -o yaml
 ```
+
+## Security
+### Globally TLS in STRICT mode
+> Com isso habilitar requisição de origem apenas para pods que tem um side car com a policita de TLS habilitado
+
+``` shell script
+kubectl apply -f - <<EOF
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: "default"
+  namespace: "istio-system"
+spec:
+  mtls:
+    mode: STRICT
+EOF
+
+## Get All
+kubectl get peerauthentication -all-namespaces
+
+## Delete
+kubectl delete peerauthentication -n istio-system default
+
+```
+
+### Enable mutual TLS per namespace or workload
+``` shell script
+kubectl apply -f - <<EOF
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: "default"
+  namespace: "foo"
+spec:
+  mtls:
+    mode: STRICT
+EOF
+
+```
+
+### HTTP Trafic
+#### Não permite nada
+``` shell script
+$ kubectl apply -f - <<EOF
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-nothing
+  namespace: default
+spec:
+  {}
+EOF
+```
+
+#### Habilitando 1 pod e 1 metodo
+``` shell script
+kubectl apply -f - <<EOF
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: "productpage-viewer"
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: productpage
+  action: ALLOW
+  rules:
+  - to:
+    - operation:
+        methods: ["GET"]
+EOF
+```
+
+#### Habilitando 1 pod e 1 metodo e uma origem (conta de serviço)
+``` shell script
+kubectl apply -f - <<EOF
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: "reviews-viewer"
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: reviews
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals: ["cluster.local/ns/default/sa/bookinfo-productpage"]
+    to:
+    - operation:
+        methods: ["GET"]
+EOF
+
+## Clean all
+kubectl delete authorizationpolicy.security.istio.io/allow-nothing
+
+```
+
+### TCP Traffic
+#### Habilita 9000 && 9000
+```shell script
+kubectl apply -f - <<EOF
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: tcp-policy
+  namespace: foo
+spec:
+  selector:
+    matchLabels:
+      app: tcp-echo
+  action: ALLOW
+  rules:
+  - to:
+    - operation:
+        ports: ["9000", "9001"]
+EOF
+```
+
+#### Só habilita GET na 9000
+```shell script
+kubectl apply -f - <<EOF
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: tcp-policy
+  namespace: foo
+spec:
+  selector:
+    matchLabels:
+      app: tcp-echo
+  action: ALLOW
+  rules:
+  - to:
+    - operation:
+        methods: ["GET"]
+        ports: ["9000"]
+EOF
+```
+
+#### Só bloqueia o GET
+```shell script
+kubectl apply -f - <<EOF
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: tcp-policy
+  namespace: foo
+spec:
+  selector:
+    matchLabels:
+      app: tcp-echo
+  action: DENY
+  rules:
+  - to:
+    - operation:
+        methods: ["GET"]
+EOF
+```
+
+### Egress
+#### Controlled access to external services
+> Somente oque for configurado vai estar habilitado
+``` shellscript
+## vamos alterar de "ALLOW_ANY" para "REGISTRY_ONLY"
+$ istioctl install --set meshConfig.outboundTrafficPolicy.mode=REGISTRY_ONLY
+```
+
+#### Liberando acesso ao google
+```shell script
+kubectl apply -f - <<EOF
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: google
+spec:
+  hosts:
+  - www.google.com
+  ports:
+  - number: 443
+    name: https
+    protocol: HTTPS
+  resolution: DNS
+  location: MESH_EXTERNAL
+EOF
+```
+
+#### Definindo timeout
+```shell script
+$ kubectl apply -f - <<EOF
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: httpbin-ext
+spec:
+  hosts:
+    - www.google.com
+  http:
+  - timeout: 3s
+    route:
+      - destination:
+          host: httpbin.org
+        weight: 100
+EOF
+```
+
 ---
 
 ### Kubernets commands
